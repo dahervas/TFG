@@ -29,7 +29,15 @@
       margin: auto;
       height: 3em;
     }
-     
+    
+    #select_file2 {
+      text-align: left;
+      width: 95%;
+      font-size: 1em;
+      margin: auto;
+      height: 3em;
+    }
+  
     .branding-below {
       bottom: 56px;
       top: 0;
@@ -72,7 +80,15 @@
         <div class="block form-group">
           <label for="select_file">Selecciona el documento bibtex:</label>
           <br>
-          <select id="select_file" name="select_file"></select>
+          <select id="select_file" name="select_file"></select><!--Por el id, funciona-->
+          <p><b id="tittle" ></b></p>
+          <p id="id"></p>
+        </div>
+        
+        <div class="block form-group">
+          <label for="select_file">Selecciona otro documento bibtex:</label>
+          <br>
+          <select id="select_file2" name="select_file2"></select>
           <p><b id="tittle" ></b></p>
           <p id="id"></p>
         </div>
@@ -109,6 +125,7 @@
     
     <script>
       var alldata = {};
+      //var alldata2 = {};
       
       /**
        * On document load, assign click handlers to each button and try to load the
@@ -122,7 +139,7 @@
       $(function() {
         $('#reset').click(resetValues);
       });
-
+      
       $(function() {
         google.script.run.withSuccessHandler(importData).getFiles("root");
 
@@ -144,6 +161,28 @@
              return;
            }
         });
+        
+        
+        google.script.run.withSuccessHandler(importData2).getFiles("root");
+        $('#select_file2').change(function() {
+           var id2 = $('#select_file2').val();
+           var disp2 = $('#select_file2 option:selected').text();
+           if (~disp2.indexOf("Folder") || ~disp2.indexOf("../")) {
+             $('#select_file2 > option').remove();
+             if (alldata[id2]) {
+               var datos = {};
+               datos[id2] = alldata[id2];
+               importData2(datos);
+               return;
+             } else {
+               google.script.run.withSuccessHandler(importData2).getFiles(id2);
+            
+               return;
+             }
+             return;
+           }
+        });
+        
       });
 
       function importData(e) {
@@ -152,17 +191,90 @@
         if (e[key]["keyparent"]) {
           $('#select_file').append($('<option>').html("./" + e[key]["keyname"]).val(key));
           $('#select_file').append($('<option>').html("../").val(e[key]["keyparent"]));
+          
+          //$('#select_file2').append($('<option>').html("./" + e[key]["keyname"]).val(key));
+          //$('#select_file2').append($('<option>').html("../").val(e[key]["keyparent"]));
         } else {
           $('#select_file').append($('<option>').html("./" + e[key]["keyname"]).val(key));
+          //$('#select_file2').append($('<option>').html("./" + e[key]["keyname"]).val(key));
         }
         for (var i=0; i < e[key]["files"].length; i++) {
           $('#select_file').append($('<option>')
             .html(e[key]["files"][i].mimeType == "folder" ? "[Folder]" + e[key]["files"][i].name : e[key]["files"][i].name)
             .val(e[key]["files"][i].id)
+            
+          /*$('#select_file2').append($('<option>')
+            .html(e[key]["files"][i].mimeType == "folder" ? "[Folder]" + e[key]["files"][i].name : e[key]["files"][i].name)
+            .val(e[key]["files"][i].id)*/
           );
         }
       }
       
+      function importData2(e) {
+        var key = Object.keys(e)[0];
+        if (!alldata[key]) alldata[key] = e[key];
+        if (e[key]["keyparent"]) {
+          //$('#select_file').append($('<option>').html("./" + e[key]["keyname"]).val(key));
+          //$('#select_file').append($('<option>').html("../").val(e[key]["keyparent"]));
+          
+          $('#select_file2').append($('<option>').html("./" + e[key]["keyname"]).val(key));
+          $('#select_file2').append($('<option>').html("../").val(e[key]["keyparent"]));
+        } else {
+          //$('#select_file').append($('<option>').html("./" + e[key]["keyname"]).val(key));
+          $('#select_file2').append($('<option>').html("./" + e[key]["keyname"]).val(key));
+        }
+        for (var i=0; i < e[key]["files"].length; i++) {
+          /*$('#select_file').append($('<option>')
+            .html(e[key]["files"][i].mimeType == "folder" ? "[Folder]" + e[key]["files"][i].name : e[key]["files"][i].name)
+            .val(e[key]["files"][i].id)*/
+            
+          $('#select_file2').append($('<option>')
+            .html(e[key]["files"][i].mimeType == "folder" ? "[Folder]" + e[key]["files"][i].name : e[key]["files"][i].name)
+            .val(e[key]["files"][i].id)
+          );
+        }
+      }
+      /***************************************************************************
+      $(function() {
+        google.script.run.withSuccessHandler(importData).getFiles("root");
+        
+        $('#select_file2').change(function() {
+           var id2 = $('#select_file2').val();
+           var disp2 = $('#select_file2 option:selected').text();
+           if (~disp2.indexOf("Folder") || ~disp2.indexOf("../")) {
+             $('#select_file2 > option').remove();
+             if (alldata2[id2]) {
+               var dat2 = {};
+               dat2[id2] = alldata2[id2];
+               importData(dat2);
+               return;
+             } else {
+               google.script.run.withSuccessHandler(importData).getFiles(id2);
+            
+               return;
+             }
+             return;
+           }
+        });
+       });
+      
+      function importData2(e) {
+        var key2 = Object.keys(e)[1];
+        if (!alldata2[key2]) alldata2[key2] = e[key2];
+        if (e[key2]["keyparent"]) {
+          $('#select_file2').append($('<option>').html("./" + e[key2]["keyname"]).val(key2));
+          $('#select_file2').append($('<option>').html("../").val(e[key2]["keyparent"]));
+        } else {
+          $('#select_file2').append($('<option>').html("./" + e[key2]["keyname"]).val(key2));
+        }
+        for (var i=0; i < e[key2]["files"].length; i++) {
+          $('#select_file2').append($('<option>')
+            .html(e[key2]["files"][i].mimeType == "folder" ? "[Folder]" + e[key2]["files"][i].name : e[key2]["files"][i].name)
+            .val(e[key2]["files"][i].id2)
+          );
+        }
+      }*/
+      /*******************************************************************************/
       
       function openDoc(){
         $("#success").remove();

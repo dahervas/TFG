@@ -283,8 +283,38 @@
         
         var style = $('#select_style').val();
         var id = $('#select_file').val();
+        var id2 = $('#select_file2').val();
+        
+    
+        
+        
         google.script.run
-        .withSuccessHandler(      
+        .withSuccessHandler(
+          //google.script.run.withSuccessHandler(function getBibtexAndDoc(id2, style));
+          function(exitoBibtex, element) {
+            if(exitoBibtex){
+              var msg = "Comprueba el nuevo documento que se ha creado en tu Drive con nombre: New Document";
+              showSuccess(msg, $('#button-bar'));
+            }else{
+              var msg = "Hubo algun error durante el proceso. Es posible que en tu .bib falte algún campo obligatorio en alguna entrada o no hayas añadido el \bibliography para insertar la sección References.";
+              showError(msg, $('#button-bar'));
+            }            
+           
+            element.disabled = false;  
+            
+        })
+        .withFailureHandler(
+          function(msg, element) {
+          msg = "Hubo un problema durante el proceso.Comprueba que hayas seleccionado el documento correcto.";
+          showError(msg, $('#button-bar'));
+          element.disabled = false;
+        })
+        .withUserObject(this)
+        .getBibtexAndDoc(id,id2,style);
+        /****************************************
+        google.script.run
+        .withSuccessHandler(
+          
           function(exitoBibtex, element) {
             if(exitoBibtex){
               var msg = "Comprueba el nuevo documento que se ha creado en tu Drive con nombre: New Document";
@@ -303,7 +333,8 @@
           element.disabled = false;
         })
         .withUserObject(this)
-        .getBibtexAndDoc(id,style);
+        .getBibtexAndDoc(id2,style);
+        *************************************************/
         
       }        
         

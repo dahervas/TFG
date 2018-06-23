@@ -1,7 +1,3 @@
-
-
-
-
 /*
        
        TERMINAR LA FUNCION finishInfo() Y CAPTURAR EL ERROR SI NO EXISTE \bibliography
@@ -85,13 +81,14 @@ function showSidebar() {
 
 //FUNCION PRINCIPAL QUE QUE ES LLAMA TRAS PULSAR EL BOTON DE "combinar documentos"
 
-function getBibtexAndDoc(e, estilo){
+function getBibtexAndDoc(e, e2, estilo){ //e es el fichero elegido
   //init the return vars
   
   //e = "1nvTRkIZ0dbHamwv_H9ovn_uPdveB6CRo"; //utilizado para el proceso de testing
   var bibtex_dict = [];
 
   var bibtex_doc = DriveApp.getFileById(e);
+  var bibtex_doc2 = DriveApp.getFileById(e2);
   
   
   //usa la nueva clase "BibTex" que se encuentra al final del script
@@ -99,18 +96,31 @@ function getBibtexAndDoc(e, estilo){
   bibtex.content = bibtex_doc.getBlob().getDataAsString(); //El contenido de bibtex como un string
   bibtex.parse();
   
+  //segundo objeto BibTex
+  var bibtex2 = new BibTex();
+  bibtex2.content = bibtex_doc2.getBlob().getDataAsString(); //Contenido del segundo bibtex como un string
+  bibtex2.parse();
   
+  var errorEncontrado2 = checkErrors(bibtex2); //comprueba el segundo bibtex
   var errorEncontrado = checkErrors(bibtex); // comprueba si hubo exito en todos los documentos encontrados
   var exito = false;
-  if(!errorEncontrado){
+  if(!errorEncontrado && !errorEncontrado2){
     var biblioExist = checkBibliography();
   }
-  if(!errorEncontrado && biblioExist){
-    
+  if(!errorEncontrado && biblioExist && !errorEncontrado2){
+    /**/var aux = bibtex.data.length;
+        var aux2 = bibtex2.data.length;
+        var total = aux+aux2;
+        var cont = 0;
     //Crea un diccionario con todos los documentos
     for(var i=0; i<bibtex.data.length; ++i){
       var outobj = bibtex.google(i);
       bibtex_dict[bibtex.data[i].cite] = outobj;
+    }
+    
+    for(var j=aux; j<total; j++){
+      var outobj2 = bibtex2.google(cont);
+      bibtex_dict[bibtex2.data[cont].cite] = outobj2;
     }
     
     var arrayCites = getCites();
@@ -153,8 +163,12 @@ function getCites(){ //Obtiene todos los \cite encontrados en el documento actua
   //var regex = new RegExp(r);
   
   var solutionArray = [];
-      
+  
   solutionArray = text.match(r);
+  
+  var body = DocumentApp.getActiveDocument().getBody();
+  var text = body.editAsText();
+  text.insertText(0, 'Inserted text.\n');
   
   return solutionArray;
 }
@@ -218,11 +232,11 @@ function checkBibliography(){
   return exito;
 }
 
-/*
 
-bibtexDoc[i] = JSON.stringify(bibtex_dict[clave]);  //transforma a el documento .bib a texto apartir de las citas encontradas en el documento.
 
-*/
+//bibtexDoc[i] = JSON.stringify(bibtex_dict[clave]);  //transforma a el documento .bib a texto apartir de las citas encontradas en el documento.
+
+
 
 
 function sustitute(arrayCites, arrayCitesId, body2, bibtex_dict, doc, estilo){ //remplaza todos los \cite{id} 
@@ -3431,3 +3445,4 @@ DOCUMENTACIÓN SOBRE BIBTEX: ftp://ftp.ctan.org/tex-archive/info/spanish/guia-bi
 Como publicar un ADD-ON (complemento): https://developers.google.com/apps-script/add-ons/publish
 
 */
+

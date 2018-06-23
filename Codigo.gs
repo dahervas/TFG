@@ -121,6 +121,7 @@ function getBibtexAndDoc(e, e2, estilo){ //e es el fichero elegido
     for(var j=aux; j<total; j++){
       var outobj2 = bibtex2.google(cont);
       bibtex_dict[bibtex2.data[cont].cite] = outobj2;
+      cont++;
     }
     
     var arrayCites = getCites();

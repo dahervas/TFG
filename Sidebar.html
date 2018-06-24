@@ -69,6 +69,39 @@
     .width-100 {
       width: 100%;
     }
+    /**********************************/
+    /*
+    .scrolling-wrapper {
+      overflow-x: scroll;
+      overflow-y: hidden;
+      white-space: nowrap;
+    }
+    
+    .scrolling-wrapper-flexbox {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      position: relative;
+      top: 300px;
+    }
+    
+    .card {
+       width: 100px;
+       height: 100px;
+       background-color: red;
+       float: left;
+       margin: 5px;
+    }*/
+    
+    .infoBlock {
+      position: relative;
+      top: 300px;
+      text-align:center;
+    }
+    
+}
+    /************************************/
+}
     </style>
   </head>
   <body>
@@ -119,6 +152,38 @@
       <img alt="Add-on logo" class="logo" src="https://www.gstatic.com/images/branding/product/1x/translate_48dp.png" width="27" height="27">
       <span class="gray branding-text">ALPHA</span>
     </div>
+    
+    <!--<div class="block">
+      <div class="scrolling-wrapper-flexbox">
+        <div class="card"><h2>Card</h2></div>
+        <div class="card"><h2>Card</h2></div>
+        <div class="card"><h2>Card</h2></div>
+        <div class="card"><h2>Card</h2></div>
+        <div class="card"><h2>Card</h2></div>
+        <div class="card"><h2>Card</h2></div>
+        <div class="card"><h2>Card</h2></div>
+        <div class="card"><h2>Card</h2></div>
+        <div class="card"><h2>Card</h2></div>
+      </div>
+     </div>-->
+    
+    <div class="infoBlock">
+      <select id="selectMe">
+        <option disabled selected value="option1">Selecciona una clase para saber más información</option>
+        <!--<option selected="default"></option>-->
+        <option value="option2">@book</option>
+        <option value="option3">@article</option>
+        <option value="option4">@techreport</option>
+        <option value="option5">@misc</option>
+      </select>
+      
+      <div id="option1" class="group"> </div>
+      <div id="option2" class="group">Para libros y otros documentos más largos que deben incluir capítulos, prólogo, apéndices o incluso partes.</div>
+      <div id="option3" class="group">Para artículos académicos y otros documentos cortos que no es necesario dividir en capítulos, sino que bastan las secciones y subsecciones y sus párrafos y subpárrafos.</div>
+      <div id="option4" class="group">Se utiliza para elaborar informes técnicos. Es similar a la clase @book</div>
+      <div id="option5" class="group">Cuando las demás clases no se corresponden se utiliza esta, no tiene atributos obligatorios</div>
+      
+     </div>
     
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
     </script>
@@ -375,6 +440,16 @@
         var div = $('<div id="success" class="success">' + msg + '</div>');
         $(element).after(div);
       }
+      
+      $(document).ready(function () {
+      $('.group').hide();
+      $('#option1').show();
+      $('#selectMe').change(function () {
+        $('.group').hide();
+        $('#'+$(this).val()).show();
+      })
+});
+      
 
     </script>
     

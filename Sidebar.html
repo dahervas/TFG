@@ -30,6 +30,14 @@
       height: 3em;
     }
     
+    #select_files {
+      text-align: left;
+      font-size: 1em;
+      margin: auto;
+      width: 100%;
+      height: 20em;
+    }
+    
     #select_file2 {
       text-align: left;
       width: 95%;
@@ -118,6 +126,11 @@
           <p id="id"></p>
         </div>
         
+        <!--<select multiple>
+          <option>opt 1 text
+          <option value="opt 2 value">opt 2 text
+        </select>-->
+        
         <div class="block form-group">
           <label for="select_file">Selecciona otro documento bibtex:</label>
           <br>
@@ -142,15 +155,34 @@
         <div class="block" id="button-bar">
           <button class="blue" id="combinar">Combinar documentos</button>
           <input type="reset" id="reset" value="Resetear formulario">
+          <!--<input type="reset" id="info" value="Informacion">-->
         </div>
         
-      </form>    
+        <div class="block form-group">
+          <label for="select_style">Escribe datos de filtrado</label>
+          <br>
+          <input type="text" placeholder="Tipo" id="filtroTipo">
+          <input type="text" placeholder="Año" id="filtroYear">
+          <input type="text" placeholder="Autor(es)" id="filtroAuthor">
+          <input type="text" placeholder="Serie(s)" id="filtroSeries">
+          <input type="text" placeholder="Editorial(es)" id="filtroEditoriales">
+          <!--<input type="text" placeholder="Tipo" id="filtro">-->
+        </div>
+        
+        
+         
+         
+         
+       
+        
+      </form>  
+      
     
     </div>
 
     <div class="sidebar bottom">
       <img alt="Add-on logo" class="logo" src="https://www.gstatic.com/images/branding/product/1x/translate_48dp.png" width="27" height="27">
-      <span class="gray branding-text">ALPHA</span>
+      <span class="gray branding-text">ALPHA v1.2</span>
     </div>
     
     <!--<div class="block">
@@ -167,11 +199,11 @@
       </div>
      </div>-->
     
-    <div class="infoBlock">
+    <!--<div class="infoBlock">
       <select id="selectMe">
         <option disabled selected value="option1">Selecciona una clase para saber más información</option>
         <!--<option selected="default"></option>-->
-        <option value="option2">@book</option>
+        <!--<option value="option2">@book</option>
         <option value="option3">@article</option>
         <option value="option4">@techreport</option>
         <option value="option5">@misc</option>
@@ -183,7 +215,7 @@
       <div id="option4" class="group">Se utiliza para elaborar informes técnicos. Es similar a la clase @book</div>
       <div id="option5" class="group">Cuando las demás clases no se corresponden se utiliza esta, no tiene atributos obligatorios</div>
       
-     </div>
+     </div>-->
     
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
     </script>
@@ -204,6 +236,11 @@
       $(function() {
         $('#reset').click(resetValues);
       });
+      
+      /*$(function() {
+        $('#informacion').click(resetValues);
+      });*/
+      
       
       $(function() {
         google.script.run.withSuccessHandler(importData).getFiles("root");
@@ -260,13 +297,20 @@
           //$('#select_file2').append($('<option>').html("./" + e[key]["keyname"]).val(key));
           //$('#select_file2').append($('<option>').html("../").val(e[key]["keyparent"]));
         } else {
-          $('#select_file').append($('<option>').html("./" + e[key]["keyname"]).val(key));
+          //if(e[key]["files"].name.indexOf(".bib")){
+          $('#select_file').append($('<option>').html("./" + e[key]["keyname"]).val(key));//}
           //$('#select_file2').append($('<option>').html("./" + e[key]["keyname"]).val(key));
         }
         for (var i=0; i < e[key]["files"].length; i++) {
-          $('#select_file').append($('<option>')
+          //var datos =getText(e[key]["files"][i].name);
+          //if(datos.indexOf(".bib")){
+            $('#select_file').append($('<option>')
+              .html(e[key]["files"][i].mimeType == "folder" ? "[Folder]" + e[key]["files"][i].name : e[key]["files"][i].name)
+              .val(e[key]["files"][i].id)
+          //}
+         /* $('#select_file').append($('<option>')
             .html(e[key]["files"][i].mimeType == "folder" ? "[Folder]" + e[key]["files"][i].name : e[key]["files"][i].name)
-            .val(e[key]["files"][i].id)
+            .val(e[key]["files"][i].id)*/
             
           /*$('#select_file2').append($('<option>')
             .html(e[key]["files"][i].mimeType == "folder" ? "[Folder]" + e[key]["files"][i].name : e[key]["files"][i].name)
@@ -349,6 +393,22 @@
         var style = $('#select_style').val();
         var id = $('#select_file').val();
         var id2 = $('#select_file2').val();
+        var filtros = [];
+        
+        filtros[0] = document.getElementById("filtroTipo").value;
+        filtros[1] = document.getElementById("filtroYear").value;
+        filtros[2] = document.getElementById("filtroAuthor").value;
+        filtros[3] = document.getElementById("filtroSeries").value;
+        filtros[4] = document.getElementById("filtroEditoriales").value;
+        
+        /*alert(escape(filtros[0]));
+        alert(escape(filtros[1]));
+        alert(escape(filtros[2]));*/
+        
+        
+        /*Para el filtro, varios input text, cada uno con un id (tipo de objeto, año, titulo... )*/
+        
+        //alert(escape(filtro));
         
     
         
@@ -375,7 +435,7 @@
           element.disabled = false;
         })
         .withUserObject(this)
-        .getBibtexAndDoc(id,id2,style);
+        .getBibtexAndDoc(id,id2,style, filtros);
         /****************************************
         google.script.run
         .withSuccessHandler(
@@ -407,7 +467,21 @@
         document.getElementById("id").innerHTML = "";
         document.getElementById("tittle").innerHTML = "";
       }
-            
+      
+      /*function menuInfo() {
+        //alert(escape("MENU"));
+        var info = HtmlService.createHtmlOutputFromFile('Info').setTitle('Información');
+        //DocumentApp.getUi().showModalDialog(info, 'AAAAA');
+
+        google.script.run
+        .withSuccessHandler(
+          
+        )
+        .withUserObject(this)
+        .showInfo(info)
+        
+
+      }*/
       
       /*function runCombination() {
         this.disabled = true;

@@ -69,9 +69,16 @@ function onInstall(e) {
 function showSidebar() {
   var ui = HtmlService.createHtmlOutputFromFile('Sidebar')
       .setTitle('Combinación de Documentos');
+      
+  //var info = HtmlService.createHtmlOutput('Info').setTitle('Información');
   DocumentApp.getUi().showSidebar(ui);
+  //DocumentApp.getUi().showModalDialog(info, 'AAAAA');
 }
 
+/*function showInfo(html){
+  DocumentApp.getUi().showModalDialog(html, 'AAAAA');
+  return ;
+}*/
 
 
 /**
@@ -81,7 +88,7 @@ function showSidebar() {
 
 //FUNCION PRINCIPAL QUE QUE ES LLAMA TRAS PULSAR EL BOTON DE "combinar documentos"
 
-function getBibtexAndDoc(e, e2, estilo){ //e es el fichero elegido
+function getBibtexAndDoc(e, e2, estilo, filtros){ //e es el fichero elegido
   //init the return vars
   
   //e = "1nvTRkIZ0dbHamwv_H9ovn_uPdveB6CRo"; //utilizado para el proceso de testing
@@ -113,16 +120,54 @@ function getBibtexAndDoc(e, e2, estilo){ //e es el fichero elegido
         var total = aux+aux2;
         var cont = 0;
     //Crea un diccionario con todos los documentos
-    for(var i=0; i<bibtex.data.length; ++i){
-      var outobj = bibtex.google(i);
-      bibtex_dict[bibtex.data[i].cite] = outobj;
-    }
+    for(var i=0; i<bibtex.data.length; ++i){ //Primer .bib
+       
+       var autores = [];
+       autores = bibtex.data[i].author;
+       /*var obj = bibtex.google(i);
+       autores = bibtex._extractAuthors(obj);*/
+       
+        //bibtex.data[i].entryType == 'article' --> FUNCIONA!
+       if(compruebaYear(bibtex.data[i].year, filtros[1]) && compruebaTipo(bibtex.data[i].entryType, filtros[0]) && compruebaAutor(autores, filtros[2])){
+          var outobj = bibtex.google(i);
+          bibtex_dict[bibtex.data[i].cite] = outobj;
+        }
+  
+      //if(bibtex.data[i].year >= filtros[1]){//filtro para un año
+      //if(filtros[1].indexOf("-") > -1){//rango de años
+        //var rango = filtros[1].split("-");
+        //if(bibtex.data[i].year >= rango[0] && bibtex.data[i].year <= rango[1]){
+          /*var outobj = bibtex.google(i);
+          bibtex_dict[bibtex.data[i].cite] = outobj;*/
+       // }
+      //}
+      //else if(filtros[1].indexOf(",") > -1){//rango de años
+        //var rango = filtros[1].split(",");
+      //  if(bibtex.data[i].year >= rango[0] && bibtex.data[i].year <= rango[1]){
+          /*var outobj = bibtex.google(i);
+      //    bibtex_dict[bibtex.data[i].cite] = outobj;*/
+      //  }
+      //}
+      //else{//solo un año
+        //if(bibtex.data[i].year >= filtros[1]){
+       
+      //}//else
+        
+     }//for
+   
     
     for(var j=aux; j<total; j++){
-      var outobj2 = bibtex2.google(cont);
-      bibtex_dict[bibtex2.data[cont].cite] = outobj2;
+      var autores2 = [];
+      autores2 = bibtex2.data[cont].author;
+    
+      if(compruebaYear(bibtex2.data[cont].year, filtros[1]) && compruebaTipo(bibtex2.data[cont].entryType, filtros[0]) && compruebaAutor(autores2, filtros[2])){//filtro para un año
+        var outobj2 = bibtex2.google(cont);
+        bibtex_dict[bibtex2.data[cont].cite] = outobj2;
+      }
       cont++;
     }
+   }
+    
     
     var arrayCites = getCites();
     var arrayCitesId = getId(arrayCites);
@@ -139,10 +184,214 @@ function getBibtexAndDoc(e, e2, estilo){ //e es el fichero elegido
     var body = doc.getBody();
     var texto = body.getText();
     exito = sustitute(arrayCites, arrayCitesId, body, bibtex_dict, doc, estilo);
-  }
+
+
   
   return exito;
 }
+
+function compruebaTipo(tipoBib, dato){
+  if(dato){
+    if(dato.indexOf(",") > -1){ //Varios tipos
+      var tipos = dato.split(",");
+      for(i=0; i<tipos.length; i++){
+        if(tipoBib == tipos[i]){
+          return true;
+        }
+      }
+      return false;
+    }
+    else{ //Sólo un tipo
+      if(tipoBib == dato){
+        return true;
+      }
+      return false;
+    } 
+  }
+  return true;
+}
+
+function compruebaYear(yearBib, dato){
+  /*if (dato <= yearBib){
+    return true;
+  }*/
+  if(dato){
+    if(dato.indexOf(",") > -1){ //Hay más de un año/franja
+      var subFiltro = dato.split(",");
+      for(i=0; i<subFiltro.length; i++){
+        if(subFiltro[i].indexOf("-") > -1){ //tenemos una franja
+          var rango = subFiltro[i].split("-"); //separamos la franja
+          if(yearBib >= rango[0] && yearBib <= rango[1]){
+            return true;
+          }
+        }
+        else{ //tenemos un año
+          if(subFiltro[i] == yearBib){
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+    else{ //Sólo hay un año/franja
+      if(dato.indexOf("-") > -1){ //Franja única
+        var rango = dato.split("-");
+        if(yearBib >= rango[0] && yearBib <= rango[1]){
+            return true;
+        }
+        return false;
+      }
+      else{ //Año único
+        if(dato == yearBib){
+          return true;
+        }
+        return false;
+      }
+    }
+   }
+   return true;
+    /*if(dato.indexOf("-") > -1){
+      var rango = dato.split("-");
+      if(yearBib >= rango[0] && yearBib <= rango[1]){
+        return true;
+      }
+    }
+    else if(dato.indexOf(",") > -1){
+      var rango = dato.split(",");
+      if(yearBib >= rango[0] && yearBib <= rango[1]){
+        return true;
+      }
+    }
+    else{
+      if (dato <= yearBib){
+        return true;
+      }
+    }
+  
+  return false;
+  }
+  else{
+    return true;
+  }*/
+}
+
+function compruebaAutor(autores, dato){
+  if(dato){
+    if(dato.indexOf(" AND ") > -1){ //Varios datos en el filtro y que estén en el mismo documento "AND"
+      var subFiltro = dato.split(" AND ");
+      var bool = true;
+      
+      if(autores.length > 1){ //varios autores en el documento
+        for(i=0; i<subFiltro.length; i++){
+          var encontrado = false; //Para cada sub-filtro, indico si se ha encontrado en algún autor (para el mismo documento)
+          for(j=0; j<autores.length; j++){
+            //¿contador veces encontrado?
+            if(autores[j]['first'].indexOf(subFiltro[i]) > -1 || autores[j]['last'].indexOf(subFiltro[i]) > -1){ //alguno de los autores se corresponde con el parámetro
+              if(encontrado==false){encontrado = true;}
+            }
+            /*else{
+              bool = false;
+            }*/
+          }
+          if(encontrado){
+            //no hacemos nada
+          }
+          else{ //no se ha encotrado el parámetro en NINGÚN autor de todos los que hay en ese documento
+            //return false;
+            bool = false;
+          }
+        }
+        //return true;
+      }
+      else{ //Único autor en el documento
+        for(i=0; i<subFiltro.length; i++){
+          if(autores[0]['first'].indexOf(subFiltro[i]) > -1 || autores[0]['last'].indexOf(subFiltro[i]) > -1){
+            //no hacemos nada
+          }
+          else{
+            bool = false;
+          }
+          
+        }
+        /*if(autores[0]['first'].indexOf(dato) > -1 || autores[0]['last'].indexOf(dato) > -1){
+          
+        }
+        else{
+          bool = false;
+        }*/
+      }
+      return bool;
+      
+    }// indexOf(" AND ")
+    else if(dato.indexOf(" OR ") > -1){ //Varios datos en el filtro pero que uno esté y el resto no importa "OR"
+      var subFiltro = dato.split(" OR ");
+      var bool = false;
+      
+       if(autores.length > 1){ //varios autores en el documento
+        for(i=0; i<subFiltro.length; i++){
+          var encontrado = false; //Para cada sub-filtro, indico si se ha encontrado en algún autor (para el mismo documento)
+          for(j=0; j<autores.length; j++){
+            //¿contador veces encontrado?
+            if(autores[j]['first'].indexOf(subFiltro[i]) > -1 || autores[j]['last'].indexOf(subFiltro[i]) > -1){ //alguno de los autores se corresponde con el parámetro
+              if(encontrado==false){encontrado = true;}
+            }
+            /*else{
+              bool = false;
+            }*/
+          }
+          if(encontrado){// se ha encontrado alguno de los parámetros
+            bool = true;
+          }
+          else{ //no se ha encotrado el parámetro en NINGÚN autor de todos los que hay en ese documento
+            //return false;
+            bool = false;
+          }
+        }
+        //return true;
+      }
+      else{ //Único autor en el documento
+        for(i=0; i<subFiltro.length; i++){
+          if(autores[0]['first'].indexOf(subFiltro[i]) > -1 || autores[0]['last'].indexOf(subFiltro[i]) > -1){
+            return true;
+          }
+          
+        }
+        /*if(autores[0]['first'].indexOf(dato) > -1 || autores[0]['last'].indexOf(dato) > -1){
+          
+        }
+        else{
+          bool = false;
+        }*/
+      }
+      return bool;
+      
+    }//indexOf(" OR ")
+    else{ //Sólo un dato a buscar
+      if(autores.length > 1){ //Varios autores en el mismo documento
+        var encontrado = false;
+        for(i=0; i<autores.length; i++){
+          if(autores[i]['first'].indexOf(dato) > -1 || autores[i]['last'].indexOf(dato) > -1){
+            if(encontrado == false){encontrado = true;}
+          }
+        }
+        if(encontrado){ //Se ha encontrado la palabra en ALGÚN autor del mismo documento
+        
+        }
+        else{
+          bool = false;
+        }
+      }
+      else{ //Sólo hay un autor
+        if(autores[0]['first'].indexOf(dato) > -1 || autores[0]['last'].indexOf(dato) > -1){
+          return true;
+        }
+      }
+    }
+    return bool;
+  }
+  return true;
+}
+
 
 function getCites(){ //Obtiene todos los \cite encontrados en el documento actual
   var body = DocumentApp.getActiveDocument().getBody();

@@ -128,7 +128,8 @@ function getBibtexAndDoc(e, e2, estilo, filtros){ //e es el fichero elegido
        autores = bibtex._extractAuthors(obj);*/
        
         //bibtex.data[i].entryType == 'article' --> FUNCIONA!
-       if(compruebaYear(bibtex.data[i].year, filtros[1]) && compruebaTipo(bibtex.data[i].entryType, filtros[0]) && compruebaAutor(autores, filtros[2])){
+       if(compruebaYear(bibtex.data[i].year, filtros[1]) && compruebaTipo(bibtex.data[i].entryType, filtros[0]) && compruebaAutor(autores, filtros[2])
+         && compruebaSeries(bibtex.data[i].series, filtros[3]) && compruebaEditorial(bibtex.data[i].publisher, filtros[4])){
           var outobj = bibtex.google(i);
           bibtex_dict[bibtex.data[i].cite] = outobj;
         }
@@ -160,7 +161,8 @@ function getBibtexAndDoc(e, e2, estilo, filtros){ //e es el fichero elegido
       var autores2 = [];
       autores2 = bibtex2.data[cont].author;
     
-      if(compruebaYear(bibtex2.data[cont].year, filtros[1]) && compruebaTipo(bibtex2.data[cont].entryType, filtros[0]) && compruebaAutor(autores2, filtros[2])){//filtro para un año
+      if(compruebaYear(bibtex2.data[cont].year, filtros[1]) && compruebaTipo(bibtex2.data[cont].entryType, filtros[0]) && compruebaAutor(autores2, filtros[2])
+        && compruebaSeries(bibtex2.data[cont].series, filtros[3]) && compruebaEditorial(bibtex2.data[cont].publisher, filtros[4])){//filtro para un año
         var outobj2 = bibtex2.google(cont);
         bibtex_dict[bibtex2.data[cont].cite] = outobj2;
       }
@@ -190,8 +192,51 @@ function getBibtexAndDoc(e, e2, estilo, filtros){ //e es el fichero elegido
   return exito;
 }
 
+function compruebaSeries(serieBib, dato){
+  if(dato && serieBib){
+    //serieBib = checkTildes(serieBib);
+    if(dato.indexOf(",") > -1){
+      var series = dato.split(",");
+      for(i=0; i<series.length; i++){
+        if(serieBib == series[i]){
+          return true;
+        }
+      }
+      return false;
+    }
+    else{
+      if(serieBib == dato){
+        return true;
+      }
+      return false;
+    }
+  }
+  return true;
+}
+
+function compruebaEditorial(editorialBib, dato){
+  if(dato && editorialBib){
+    if(dato.indexOf(",") > -1){
+      var editoriales = dato.split(",");
+      for(i=0; i<editoriales.length; i++){
+        if(editorialBib == editoriales[i]){
+          return true;
+        }
+      }
+      return false;
+    }
+    else{
+      if(editorialBib == dato){
+        return true;
+      }
+      return false;
+    }
+  }
+  return true;
+}
+
 function compruebaTipo(tipoBib, dato){
-  if(dato){
+  if(dato && tipoBib){
     if(dato.indexOf(",") > -1){ //Varios tipos
       var tipos = dato.split(",");
       for(i=0; i<tipos.length; i++){
@@ -215,7 +260,7 @@ function compruebaYear(yearBib, dato){
   /*if (dato <= yearBib){
     return true;
   }*/
-  if(dato){
+  if(dato && yearBib){
     if(dato.indexOf(",") > -1){ //Hay más de un año/franja
       var subFiltro = dato.split(",");
       for(i=0; i<subFiltro.length; i++){
@@ -276,7 +321,7 @@ function compruebaYear(yearBib, dato){
 }
 
 function compruebaAutor(autores, dato){
-  if(dato){
+  if(dato && autores){
     if(dato.indexOf(" AND ") > -1){ //Varios datos en el filtro y que estén en el mismo documento "AND"
       var subFiltro = dato.split(" AND ");
       var bool = true;

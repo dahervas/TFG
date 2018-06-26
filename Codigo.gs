@@ -3739,5 +3739,7 @@ DOCUMENTACIÓN SOBRE BIBTEX: ftp://ftp.ctan.org/tex-archive/info/spanish/guia-bi
 
 Como publicar un ADD-ON (complemento): https://developers.google.com/apps-script/add-ons/publish
 
+Campos obligatorios y opcionales según las diferentes entradas de BibTex: https://www.andy-roberts.net/res/writing/latex/bibentries.pdf
+
 */
 

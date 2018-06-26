@@ -8,6 +8,7 @@ Hi
 METAS ALCANZADAS:
 
 -Añadido soporte para un segundo archivo .bib
+
 -Añadido desplegable para mostrar información de los objetos seleccionados
 
 =============================================

@@ -11,6 +11,7 @@ METAS ALCANZADAS:
 -Añadido desplegable para mostrar información de los objetos seleccionados
 
 =============================================
+
 METAS PRÓXIMAS:
 
 -El desplegable para mostrar información de objetos, convertirlo a un menú desplegable o una ventana adecuada que muestre sus campos con valores de ejemplo.

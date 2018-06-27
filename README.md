@@ -31,7 +31,9 @@ METAS ALCANZADAS
 METAS PRÓXIMAS:
 
 -Mostrar la bibliografía resultante de los filtros sustituyendola en el documento con un *\report*.
+
 -Ventana para mostrar información sobre los campos de los documentos.
+
 -Poder realizar una selección mayor de archivos .bib
 
 =============================================

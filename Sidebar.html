@@ -107,15 +107,37 @@
       text-align:center;
     }
     
-}
+/*}*/
     /************************************/
-}
+/*}*/
     </style>
   </head>
   <body>
   
     <div class="sidebar branding-below">
-    
+      <!--<ul>
+       <li onclick="this.parentNode.removeChild(this);">
+        <input type="hidden" name="ingredients[]" value="Cheese" />
+        Cheese
+       </li>
+       <li onclick="this.parentNode.removeChild(this);">
+        <input type="hidden" name="ingredients[]" value="Ham" />
+        Ham
+       </li>
+       <li onclick="this.parentNode.removeChild(this);">
+        <input type="hidden" name="ingredients[]" value="Mushrooms" />
+        Mushrooms
+       </li>
+      </ul>
+      <select onchange="selectIngredient(this);">
+       <option value="Cheese">Cheese</option>
+       <option value="Olives">Olives</option>
+       <option value="Tomato">Tomato</option>
+       <option value="Pepperoni">Pepperoni</option>
+       <option value="Pinneapple">Pinneapple</option>
+       <option value="Banana">Banana</option>
+       <option value="Pear">Pear</option>
+      </select>-->
     
       <form>        
         <div class="block form-group">
@@ -153,36 +175,43 @@
         </div> -->
         
         <div class="block" id="button-bar">
+          
+          <button class="green" id="reporte">Crear un reporte</button>
           <button class="blue" id="combinar">Combinar documentos</button>
-          <input type="reset" id="reset" value="Resetear formulario">
           <!--<input type="reset" id="info" value="Informacion">-->
         </div>
         
         <div class="block form-group">
           <label for="select_style">Escribe datos de filtrado</label>
           <br>
-          <input type="text" placeholder="Tipo" id="filtroTipo">
-          <input type="text" placeholder="Año" id="filtroYear">
-          <input type="text" placeholder="Autor(es)" id="filtroAuthor">
-          <input type="text" placeholder="Serie(s)" id="filtroSeries">
-          <input type="text" placeholder="Editorial(es)" id="filtroEditoriales">
+          <form>
+            <input type="text" placeholder="Tipo" id="filtroTipo">
+            <input type="text" placeholder="Año" id="filtroYear">
+            <input type="text" placeholder="Autor(es)" id="filtroAuthor">
+            <input type="text" placeholder="Serie(s)" id="filtroSeries">
+            <input type="text" placeholder="Editorial(es)" id="filtroEditoriales">
+          </form>
           <!--<input type="text" placeholder="Tipo" id="filtro">-->
         </div>
         
         
-         
-         
-         
-       
         
-      </form>  
+        
+      </form>
       
+      <br>
+      <div class="block" id="button-bar">
+        <!--<button class="blue" id="info">Información</button>-->
+        <input type="reset" id="reset" value="Resetear formulario">
+        <input type="reset" id="info" value="Informacion" onclick="showAlert()">
+      </div>
+        
     
     </div>
 
     <div class="sidebar bottom">
       <img alt="Add-on logo" class="logo" src="https://www.gstatic.com/images/branding/product/1x/translate_48dp.png" width="27" height="27">
-      <span class="gray branding-text">ALPHA v1.2</span>
+      <span class="gray branding-text">ALPHA v1.3</span>
     </div>
     
     <!--<div class="block">
@@ -228,13 +257,53 @@
        * On document load, assign click handlers to each button and try to load the
        * user's origin and destination language preferences if previously set.
        */
-       
+      
+      $(function(){
+        $('#info').click(showAlert);
+      });
+      
+      function showAlert(){
+        /*var uiInstance = UiApp.createApplication()
+        .setWidth(250)
+        .setHeight(300);
+        uiInstance.add(uiInstance.createLabel('The photograph on the dashboard taken years ago...'));
+        DocumentApp.getUi().showModelessDialog(uiInstance, 'My add-on');*/
+        
+        google.script.run
+        .withUserObject(this)
+        .showInfo();
+        
+        return ;
+      }
+      
+      /*function selectIngredient(select){
+        var $ul = $(select).prev('ul');
+         
+        if ($ul.find('input[value=' + $(select).val() + ']').length == 0)
+          $ul.append('<li onclick="$(this).remove();">' +
+            '<input type="hidden" name="ingredients[]" value="' + 
+            $(select).val() + '" /> ' +
+            $(select).find('option[selected]').text() + '</li>');
+      }*/
+      
       $(function() {
         $('#combinar').click(openDoc);
       });
       
+       $(function() {
+        $('#reporte').click(openDocReport);
+      });
+      
+      
       $(function() {
         $('#reset').click(resetValues);
+        
+        /*var htmlOutput = HtmlService
+        .createHtmlOutput('<p>A change of speed, a change of style...</p>')
+        .setWidth(250)
+        .setHeight(300);
+        document.getUi().showModalDialog(htmlOutput, 'My add-on');*/
+        
       });
       
       /*$(function() {
@@ -393,6 +462,7 @@
         var style = $('#select_style').val();
         var id = $('#select_file').val();
         var id2 = $('#select_file2').val();
+        var option = 1; //Opction 1 = Citar y añadir la sección de referencias
         var filtros = [];
         
         filtros[0] = document.getElementById("filtroTipo").value;
@@ -435,7 +505,7 @@
           element.disabled = false;
         })
         .withUserObject(this)
-        .getBibtexAndDoc(id,id2,style, filtros);
+        .getBibtexAndDoc(id,id2,style,filtros, option);
         /****************************************
         google.script.run
         .withSuccessHandler(
@@ -461,7 +531,66 @@
         .getBibtexAndDoc(id2,style);
         *************************************************/
         
-      }        
+      }
+      
+      /********************************/
+      function openDocReport(){
+        $("#success").remove();
+        this.disabled = true;
+        $('#error').remove();
+        
+        var style = $('#select_style').val();
+        var id = $('#select_file').val();
+        var id2 = $('#select_file2').val();
+        var option = 2; //Opción 2 = Mostrar un reporte
+        var filtros = [];
+        
+        filtros[0] = document.getElementById("filtroTipo").value;
+        filtros[1] = document.getElementById("filtroYear").value;
+        filtros[2] = document.getElementById("filtroAuthor").value;
+        filtros[3] = document.getElementById("filtroSeries").value;
+        filtros[4] = document.getElementById("filtroEditoriales").value;
+        
+        /*alert(escape(filtros[0]));
+        alert(escape(filtros[1]));
+        alert(escape(filtros[2]));*/
+        
+        
+        /*Para el filtro, varios input text, cada uno con un id (tipo de objeto, año, titulo... )*/
+        
+        //alert(escape(filtro));
+        
+    
+        
+        
+        google.script.run
+        .withSuccessHandler(
+          //google.script.run.withSuccessHandler(function getBibtexAndDoc(id2, style));
+          function(exitoBibtex, element) {
+            if(exitoBibtex){
+              var msg = "Comprueba el nuevo documento que se ha creado en tu Drive con nombre: New Document";
+              showSuccess(msg, $('#button-bar'));
+            }else{
+              var msg = "Hubo algun error durante el proceso. Es posible que en tu .bib falte algún campo obligatorio en alguna entrada o no hayas añadido el \bibliography para insertar la sección References.";
+              showError(msg, $('#button-bar'));
+            }            
+           
+            element.disabled = false;  
+            
+        })
+        .withFailureHandler(
+          function(msg, element) {
+          msg = "Hubo un problema durante el proceso.Comprueba que hayas seleccionado el documento correcto.";
+          showError(msg, $('#button-bar'));
+          element.disabled = false;
+        })
+        .withUserObject(this)
+        .getBibtexAndDoc(id,id2,style,filtros, option);
+        
+      } 
+      
+      
+      /***********************************/
         
       function resetValues() {
         document.getElementById("id").innerHTML = "";

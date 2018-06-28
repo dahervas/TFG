@@ -85,10 +85,29 @@ function showSidebar() {
 * @NotOnlyCurrentDoc
 */
 
+function showInfo(){
+  var uiInstance = UiApp.createApplication()
+  .setWidth(250)
+  .setHeight(300);
+  uiInstance.add(uiInstance.createLabel('Selecciona un documento para mostrar su información'));
+  //uiInstance.createTextBox();
+  //uiInstance.add(textbox);
+  /*uiInstance.add(uiInstance.createButton('Click me too!',
+      uiInstance.createClientHandler().forEventSource().setText('Clicked!')));*/
+      
+  var button = uiInstance.createButton("a button");
+  var panel = uiInstance.createAbsolutePanel();
+  // add a widget at position (10, 20)
+  panel.add(button, 10, 20);
+  uiInstance.add(panel);
+  DocumentApp.getUi().showModelessDialog(uiInstance, 'Información');
+  
+  //return HtmlService.createHtmlOutputFromFile('Info');
+}
 
 //FUNCION PRINCIPAL QUE QUE ES LLAMA TRAS PULSAR EL BOTON DE "combinar documentos"
 
-function getBibtexAndDoc(e, e2, estilo, filtros){ //e es el fichero elegido
+function getBibtexAndDoc(e, e2, estilo, filtros, option){ //e es el fichero elegido
   //init the return vars
   
   //e = "1nvTRkIZ0dbHamwv_H9ovn_uPdveB6CRo"; //utilizado para el proceso de testing
@@ -185,14 +204,18 @@ function getBibtexAndDoc(e, e2, estilo, filtros){ //e es el fichero elegido
     var doc = DocumentApp.openById(newIdDoc);
     var body = doc.getBody();
     var texto = body.getText();
-    exito = sustitute(arrayCites, arrayCitesId, body, bibtex_dict, doc, estilo);
-
-
+    
+    if(option == 1){
+      exito = sustitute(arrayCites, arrayCitesId, body, bibtex_dict, doc, estilo);
+    }
+    else if(option == 2){
+      exito = report(arrayCitesId, bibtex_dict, doc, estilo, body);
+    }
   
   return exito;
 }
 
-function compruebaSeries(serieBib, dato){
+function compruebaSeries(serieBib, dato){ //Aquellos que no tengan series, también se muestran por ser un campo poco común
   if(dato && serieBib){
     //serieBib = checkTildes(serieBib);
     if(dato.indexOf(",") > -1){
@@ -214,7 +237,7 @@ function compruebaSeries(serieBib, dato){
   return true;
 }
 
-function compruebaEditorial(editorialBib, dato){
+function compruebaEditorial(editorialBib, dato){ //Aquellos que no tengan editorial, también se muestran por ser un campo poco común
   if(dato && editorialBib){
     if(dato.indexOf(",") > -1){
       var editoriales = dato.split(",");
@@ -570,6 +593,41 @@ function sustitute(arrayCites, arrayCitesId, body2, bibtex_dict, doc, estilo){ /
   
   var exitoBiblio = setBiblio(body2, clavesNoEncontradas, listaTuplas, estilo, clavesEncontradas, arrayCitesId);  
   
+  
+  
+  doc.saveAndClose();
+ 
+  return exito;
+}
+
+function report(arrayCitesId, bibtex_dict, doc, estilo, body2){
+  /* lista para el reporte */
+   var listaTuplasReporte = []; //Información de todas las citas que hayan pasado los filtros
+   //var aux;
+   
+   /*for(i=0; i<arrayCitesId.length; i++){
+     var clavesConj = arrayCitesId[i];
+     for(j=0; j<clavesConj.length; j++){
+       var claveUnitaria = clavesConj[j];
+       
+       listaTuplasReporte[j] = {};
+       listaTuplasReporte[j].cite = claveUnitaria;
+       listaTuplasReporte[j].info = bibtex_dict[claveUnitaria];
+     }
+   }*/
+   var exito = true;
+   for(i=0; i<arrayCitesId.length; i++){
+     var ClaveUnitaria = arrayCitesId[i];
+     listaTuplasReporte[i] = {};
+     listaTuplasReporte[i].cite = ClaveUnitaria;
+     listaTuplasReporte[i].info = bibtex_dict[ClaveUnitaria];
+     
+   }
+   
+   /* SECCIÓN PARA EL REPORTE DE LAS CITAS */
+  
+  var exitoReporte = setReport(body2, listaTuplasReporte, estilo/*, arrayCitesId*/);
+  
   doc.saveAndClose();
  
   return exito;
@@ -678,9 +736,155 @@ function setBiblio(body, clavesNoEncontradas, listaTuplas, estilo, clavesEncontr
     
     elem.removeFromParent();
   }
+  //exito = true;
   return exito;
 }
 
+//Insertamos el informe en donde aparezca el \report
+
+function setReport(body, listaTuplasReporte, estilo/*, arrayCitesId*/){
+  
+  /* PÁRRAFO PARA EL INFORME/REPORTE */
+  
+  var rangeElem = body.findText("\\\\report");
+  var exito;
+  
+  if(rangeElem === null){ //No se encontró \report en el texto
+    exito = false;
+  }else{
+    exito = true;
+    var elem = rangeElem.getElement(); //Cogemos el elemento
+    var parent = elem.getParent(); //Cogemos al padre
+    var index = parent.getParent().getChildIndex(parent); //Índice del hijo
+    
+    var style = {}; 
+    style[DocumentApp.Attribute.FONT_SIZE] = 10;
+    style[DocumentApp.Attribute.BOLD] = true;
+    
+    var miReport = body.insertParagraph(index, "Report");
+    
+    index++;
+    miReport.setHeading(DocumentApp.ParagraphHeading.HEADING1);
+    
+    //elem.removeFromParent(); //Quitamos el \report
+    var arrayCitesInserted = constructReporte(listaTuplasReporte, estilo, body, index); //Posiblemente falle por aquí
+    //body.editAsText().removeFromParent(elem);
+    elem.removeFromParent();
+  }
+  return exito;
+}
+
+function constructReporte(listaTuplasReporte, estilo, body, index){ //Conviene modificar el código para que sólo genere o la bibliografía o el reporte por problemas con usar el mismo index
+  
+  /* --------------------- Estilos ------------------------ */
+  
+  var boldStyle = {};
+  boldStyle[DocumentApp.Attribute.FONT_SIZE] = 10;
+  boldStyle[DocumentApp.Attribute.BOLD] = true;
+  boldStyle[DocumentApp.Attribute.ITALIC] = false;
+  boldStyle[DocumentApp.Attribute.FONT_FAMILY] = "Times New Roman";
+  
+  var italicStyle = {};
+  italicStyle[DocumentApp.Attribute.FONT_SIZE] = 10;
+  italicStyle[DocumentApp.Attribute.BOLD] = false;
+  italicStyle[DocumentApp.Attribute.ITALIC] = true;
+  italicStyle[DocumentApp.Attribute.FONT_FAMILY] = "Times New Roman";
+  
+  var normalStyle = {};
+  normalStyle[DocumentApp.Attribute.FONT_SIZE] = 10;
+  normalStyle[DocumentApp.Attribute.BOLD] = false;
+  normalStyle[DocumentApp.Attribute.ITALIC] = false;
+  normalStyle[DocumentApp.Attribute.FONT_FAMILY] = "Times New Roman";
+  
+  
+  /* ----------------- Construcción de la Tabla ---------------------- */ 
+  
+  var table = body.insertTable(index);
+  table.setBorderWidth(0);
+  
+  estilo = "unsrt";
+  switch(estilo){
+    case "abbrv":
+      
+    break;
+    case "acm":
+      
+    break;
+    
+    case "alpha":
+      
+    break;
+    case "plain":
+      
+    break;
+    case "apalike":
+      
+    break;
+    case "unsrt":
+      for(var i=0; i<listaTuplasReporte.length; i++){
+        var elemento = {};
+        var arrayCitesInserted = [];
+        var existe = checkIfExist(arrayCitesInserted,listaTuplasReporte[i].cite);
+        var cont = 0;
+        if(listaTuplasReporte[i].cite === undefined || listaTuplasReporte[i].info === undefined){
+          
+          var encontrado = false;
+          var k = 0;
+          
+          while(k < arrayCitesInserted.length && !encontrado){
+            if(arrayCitesInserted[k].cite == listaTuplasReporte[i].cite){
+              elemento.name = arrayCitesInserted[k].name;
+              elemento.cite = listaTuplasReporte[i].cite;
+              encontrado = true;
+            }else{
+              k++;
+            }
+          }
+        }else{
+        
+          elemento.name = constructName(cont,listaTuplasReporte[i],estilo);
+          elemento.cite = listaTuplasReporte[i].cite;
+          cont++;
+          var tr = table.appendTableRow(); 
+          
+          //for(var j=0; j<2; j++){      
+            
+            var td = tr.appendTableCell();
+            var paraInCell = td.getChild(0).asParagraph();   //párrafo para la celda
+            
+           // if(j === 0){                                              //1ª celda, con el [foo]
+              /*paraInCell.appendText("[" + elemento.name + "]");
+              paraInCell.setAttributes(boldStyle);*/
+              var finalElem = constructObj(listaTuplasReporte[i].info);
+              
+              for(var key in finalElem){
+                if((key == "title" && listaTuplasReporte[i].info.entryType != "article") || (key == "journal") || (key == "booktitle")){
+                  var text = paraInCell.appendText(finalElem[key]);
+                  text.setAttributes(italicStyle);
+                }else{
+                  var text = paraInCell.appendText(finalElem[key]);
+                  text.setAttributes(normalStyle);
+                }
+              }
+            //}else if(j == 1){                                        //2ª celda, con la información de la cita
+              
+              /*var finalElem = constructObj(listaTuplasReporte[i].info);
+              
+              for(var key in finalElem){
+                if((key == "title" && listaTuplasReporte[i].info.entryType != "article") || (key == "journal") || (key == "booktitle")){
+                  var text = paraInCell.appendText(finalElem[key]);
+                  text.setAttributes(italicStyle);
+                }else{
+                  var text = paraInCell.appendText(finalElem[key]);
+                  text.setAttributes(normalStyle);
+                }
+              }*/
+           // }
+        }   
+      }
+      break;
+    }
+  }
 
 function constructInfo(listaTuplas, estilo, body, index, clavesNoEncontradas){
   
@@ -783,8 +987,8 @@ function constructInfo(listaTuplas, estilo, body, index, clavesNoEncontradas){
               }
             }            
           }
-        }
-      }
+        } //else
+      } //for
     break;
   }
   

@@ -1074,9 +1074,9 @@ function compare(a,b) {
   else if (b.info === undefined || b.cite === undefined)return 1;
   else{
     if (a.info.year < b.info.year)
-      return -1;
-    if (a.info.year > b.info.year)
       return 1;
+    if (a.info.year > b.info.year)
+      return -1;
     return 0;
   }
 }

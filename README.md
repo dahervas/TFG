@@ -37,3 +37,18 @@ METAS PRÓXIMAS:
 -Poder realizar una selección mayor de archivos .bib
 
 =============================================
+# VERSION 1.3
+
+METAS ALCANZADAS
+
+-Ahora se sustituye en el documento original la cadena *\report* por un informe con los documentos bibliográficos que hayan superado los filtros (si los hay). Para elegir si se quiere mostrar el reporte o realizar la citación y añadir la bibliografía, hay dos botones identificativos.
+
+-Mediante un botón se muestra una ventana destinada a contener un desplegable en el que seleccionar el tipo de documento y obtener los campos obligatorios para dicho tipo.
+
+=============================================
+
+METAS PRÓXIMAS
+
+-Rellenar la ventana con la información de cada tipo de documento.
+
+-Permitir una selección más variada de documentos .bib mediante un array que contenga los elementos seleccionados.

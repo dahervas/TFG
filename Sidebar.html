@@ -181,6 +181,13 @@
           <!--<input type="reset" id="info" value="Informacion">-->
         </div>
         
+         <br>
+      <div class="block" id="button-bar">
+        <!--<button class="blue" id="info">Información</button>-->
+        <input type="reset" id="reset" value="Resetear formulario">
+        <input type="reset" id="info" value="Informacion" onclick="showAlert()">
+      </div>
+        
         <div class="block form-group">
           <label for="select_style">Escribe datos de filtrado</label>
           <br>
@@ -195,16 +202,16 @@
         </div>
         
         
-        
+       
         
       </form>
       
-      <br>
+      <!--<br>
       <div class="block" id="button-bar">
         <!--<button class="blue" id="info">Información</button>-->
-        <input type="reset" id="reset" value="Resetear formulario">
+        <!--<input type="reset" id="reset" value="Resetear formulario">
         <input type="reset" id="info" value="Informacion" onclick="showAlert()">
-      </div>
+      </div>-->
         
     
     </div>
@@ -269,12 +276,19 @@
         uiInstance.add(uiInstance.createLabel('The photograph on the dashboard taken years ago...'));
         DocumentApp.getUi().showModelessDialog(uiInstance, 'My add-on');*/
         
+        /*google.script.run
+        .withUserObject(this)
+        .showInfo();*/
         google.script.run
         .withUserObject(this)
         .showInfo();
         
-        return ;
+        //DocumentApp.getUi().createMenu('Información').addItem('Show information', 'showInfo').addToUi();
+        
+        //return ;
       }
+      
+      
       
       /*function selectIngredient(select){
         var $ul = $(select).prev('ul');
@@ -645,13 +659,13 @@
       }
       
       $(document).ready(function () {
-      $('.group').hide();
-      $('#option1').show();
-      $('#selectMe').change(function () {
         $('.group').hide();
-        $('#'+$(this).val()).show();
-      })
-});
+        $('#option1').show();
+        $('#selectMe').change(function () {
+          $('.group').hide();
+          $('#'+$(this).val()).show();
+        })
+      });
       
 
     </script>

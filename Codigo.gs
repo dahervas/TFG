@@ -1,5 +1,5 @@
 /*
-       
+       20180629
        TERMINAR LA FUNCION finishInfo() Y CAPTURAR EL ERROR SI NO EXISTE \bibliography
        
 */ 
@@ -41,9 +41,13 @@
  *     running in, inspect e.authMode.
  */
 function onOpen(e) {
+
+  DocumentApp.getUi().createMenu('Información').addItem('Show information', 'showInfo').addToUi();
   DocumentApp.getUi().createAddonMenu()
       .addItem('Comenzar', 'showSidebar')
       .addToUi();
+      
+  
 }
 
 /**
@@ -75,6 +79,26 @@ function showSidebar() {
   //DocumentApp.getUi().showModalDialog(info, 'AAAAA');
 }
 
+/*function showMiModal(){
+  DocumentApp.getUi().createMenu('Información').addItem('Show information', 'showInfo').addToUi();
+}*/
+
+/*function showInfo(){
+  var html = HtmlService.createHtmlOutputFromFile('Info').setWidth(400).setHeight(300);
+  DocumentApp.getUi().showModalDialog(html, 'Information');
+}*/
+
+
+function showInfo() {
+  var html = HtmlService.createHtmlOutputFromFile('Info')
+      .setWidth(600)
+      .setHeight(425)
+      .setSandboxMode(HtmlService.SandboxMode.IFRAME);
+  DocumentApp.getUi().showModalDialog(html, 'Información');
+}
+
+
+
 /*function showInfo(html){
   DocumentApp.getUi().showModalDialog(html, 'AAAAA');
   return ;
@@ -85,7 +109,7 @@ function showSidebar() {
 * @NotOnlyCurrentDoc
 */
 
-function showInfo(){
+function showInfo2(){
   var uiInstance = UiApp.createApplication()
   .setWidth(250)
   .setHeight(300);
@@ -767,14 +791,14 @@ function setReport(body, listaTuplasReporte, estilo/*, arrayCitesId*/){
     miReport.setHeading(DocumentApp.ParagraphHeading.HEADING1);
     
     //elem.removeFromParent(); //Quitamos el \report
-    var arrayCitesInserted = constructReporte(listaTuplasReporte, estilo, body, index); //Posiblemente falle por aquí
+    var arrayCitesInserted = constructReporte(listaTuplasReporte, estilo, body, index); 
     //body.editAsText().removeFromParent(elem);
     elem.removeFromParent();
   }
   return exito;
 }
 
-function constructReporte(listaTuplasReporte, estilo, body, index){ //Conviene modificar el código para que sólo genere o la bibliografía o el reporte por problemas con usar el mismo index
+function constructReporte(listaTuplasReporte, estilo, body, index){ 
   
   /* --------------------- Estilos ------------------------ */
   
@@ -798,7 +822,40 @@ function constructReporte(listaTuplasReporte, estilo, body, index){ //Conviene m
   
   
   /* ----------------- Construcción de la Tabla ---------------------- */ 
+  /*var tiposEntrada = [];//array con los tipos de todos los documentos sin repeticiones
+  var indicesTipo = []; //array con los indices de las tablas y el tipo de entrada para cada indice
+  var cont = 0;
+  for(i=0; i<listaTuplasReporte.length; i++){
+    if(tiposEntrada.indexOf(listaTuplasReporte[i].info.entryType) > -1){ //ya tenemos anotada ese tipo de entrada
+      //no hacemos nada
+    }else{
+      tiposEntrada[cont] = listaTuplasReporte[i].info.entryType; //añadimos el tipo de entrada
+      cont++;
+    }
+  }
+  for(j=0; j<tiposEntrada.length; j++){
+    var aux = body.insertParagraph(index, tiposEntrada[j]) //la variable aux va a ser chafada cada iteración
+    index++;
+    aux.setHeading(DocumentApp.ParagraphHeading.HEADING2);
+    
+    var obj = {};
+    var table = body.insertTable(index);
+    table.setBorderWidth(0);
+    index++;
+    
+    var tr = table.appendTableRow(); 
+    var td = tr.appendTableCell();
+    var paraInCell = td.getChild(0).asParagraph();
+    var text = paraInCell.appendText("prueba");
+  }*/
   
+  //tiposEntrada[0] = listaTuplasReporte[0].info.entryType;
+  //Dividimos las citas por entryType
+  //var parrafo1 = body.insertParagraph(index, tiposEntrada[0]);
+  //index++;
+  
+  //parrafo1.setHeading(DocumentApp.ParagraphHeading.HEADING2);
+  /**********************************************************************/
   var table = body.insertTable(index);
   table.setBorderWidth(0);
   
@@ -821,7 +878,113 @@ function constructReporte(listaTuplasReporte, estilo, body, index){ //Conviene m
       
     break;
     case "unsrt":
-      for(var i=0; i<listaTuplasReporte.length; i++){
+      /**********************************/
+      var tiposEntrada = [];//array con los tipos de todos los documentos sin repeticiones
+      //var indicesTipo = []; //array con los indices de las tablas y el tipo de entrada para cada indice
+      var cont = 0;
+      for(i=0; i<listaTuplasReporte.length; i++){
+        if(listaTuplasReporte[i].cite === undefined || listaTuplasReporte[i].info === undefined){}
+        else{
+          if(tiposEntrada.indexOf(listaTuplasReporte[i].info.entryType) > -1){ //ya tenemos anotada ese tipo de entrada
+            //no hacemos nada
+          }else{
+            tiposEntrada[cont] = listaTuplasReporte[i].info.entryType; //añadimos el tipo de entrada
+            cont++;
+          }
+        }
+      }
+      
+      //AQUI SE DEBEN ORDENAR LAS TUPLAS DE LISTATUPLASREPORTE POR AÑO DESCENDENTE
+      //var listaOrdenTuplasRep = ordenarPorYear(listaTuplasReporte);
+      listaTuplasReporte.sort(compare);
+      //
+      
+      for(j=0; j<tiposEntrada.length; j++){
+        var aux = body.insertParagraph(index, tiposEntrada[j]) //la variable aux va a ser chafada cada iteración
+        index++;
+        aux.setHeading(DocumentApp.ParagraphHeading.HEADING2);
+        
+        
+        var table = body.insertTable(index);
+        table.setBorderWidth(0);
+        index++;
+        
+        
+        //Comprobacion de si existe o no
+        for(var i=0; i<listaTuplasReporte.length; i++){
+        var elemento = {};
+        var arrayCitesInserted = [];
+        var existe = checkIfExist(arrayCitesInserted,listaTuplasReporte[i].cite);
+        var cont = 0;
+        if(listaTuplasReporte[i].cite === undefined || listaTuplasReporte[i].info === undefined){
+          
+          var encontrado = false;
+          var k = 0;
+          
+          while(k < arrayCitesInserted.length && !encontrado){
+            if(arrayCitesInserted[k].cite == listaTuplasReporte[i].cite){
+              elemento.name = arrayCitesInserted[k].name;
+              elemento.cite = listaTuplasReporte[i].cite;
+              encontrado = true;
+            }else{
+              k++;
+            }
+          }
+        }else{//Existe y comprobamos que este es su párrafo
+          if(listaTuplasReporte[i].info.entryType == tiposEntrada[j]){
+            elemento.name = constructName(cont,listaTuplasReporte[i],estilo);
+            elemento.cite = listaTuplasReporte[i].cite;
+            cont++;
+            
+            
+            //for(var j=0; j<2; j++){      
+              
+              
+              
+             // if(j === 0){                                              //1ª celda, con el [foo]
+                /*paraInCell.appendText("[" + elemento.name + "]");
+                paraInCell.setAttributes(boldStyle);*/
+                
+              //Antes de insertar la fila y la celda, insertaremos un subheader en función del tipo de documento(entryType)
+              
+              
+              //Insertamos la tabla para las entradas de un tipo
+              //var table = body.insertTable(index);
+              //table.setBorderWidth(0);
+              
+              var tr = table.appendTableRow(); 
+              var td = tr.appendTableCell();
+              var paraInCell = td.getChild(0).asParagraph();   //párrafo para la celda
+                
+                var finalElem = constructObj(listaTuplasReporte[i].info); //las informaciones para cada tipo, necesita un array de 
+                
+                for(var key in finalElem){
+                  if((key == "title" && listaTuplasReporte[i].info.entryType != "article") || (key == "journal") || (key == "booktitle")){
+                    var text = paraInCell.appendText(finalElem[key]);
+                    text.setAttributes(italicStyle);
+                  }else{
+                    var text = paraInCell.appendText(finalElem[key]);
+                    text.setAttributes(normalStyle);
+                  }
+                }
+            }
+         }
+        
+        //Insertamos la columna para esa entrada
+        /*var tr = table.appendTableRow(); 
+        var td = tr.appendTableCell();
+        var paraInCell = td.getChild(0).asParagraph();
+        var text = paraInCell.appendText("prueba");*/
+      }//for
+     }
+     break;
+   }
+ }
+     
+    
+      /**********************************/
+      //ANTERIOR 
+      /*for(var i=0; i<listaTuplasReporte.length; i++){
         var elemento = {};
         var arrayCitesInserted = [];
         var existe = checkIfExist(arrayCitesInserted,listaTuplasReporte[i].cite);
@@ -844,18 +1007,31 @@ function constructReporte(listaTuplasReporte, estilo, body, index){ //Conviene m
         
           elemento.name = constructName(cont,listaTuplasReporte[i],estilo);
           elemento.cite = listaTuplasReporte[i].cite;
-          cont++;
-          var tr = table.appendTableRow(); 
+          cont++;*/ 
+       //ANTERIOR
+          
           
           //for(var j=0; j<2; j++){      
             
-            var td = tr.appendTableCell();
-            var paraInCell = td.getChild(0).asParagraph();   //párrafo para la celda
+            
             
            // if(j === 0){                                              //1ª celda, con el [foo]
               /*paraInCell.appendText("[" + elemento.name + "]");
               paraInCell.setAttributes(boldStyle);*/
-              var finalElem = constructObj(listaTuplasReporte[i].info);
+              
+            //Antes de insertar la fila y la celda, insertaremos un subheader en función del tipo de documento(entryType)
+            
+            
+            //Insertamos la tabla para las entradas de un tipo
+            //var table = body.insertTable(index);
+            //table.setBorderWidth(0);
+            
+            //ANTERIOR
+            /*var tr = table.appendTableRow(); 
+            var td = tr.appendTableCell();
+            var paraInCell = td.getChild(0).asParagraph();   //párrafo para la celda
+              
+              var finalElem = constructObj(listaTuplasReporte[i].info); //las informaciones para cada tipo, necesita un array de 
               
               for(var key in finalElem){
                 if((key == "title" && listaTuplasReporte[i].info.entryType != "article") || (key == "journal") || (key == "booktitle")){
@@ -865,7 +1041,9 @@ function constructReporte(listaTuplasReporte, estilo, body, index){ //Conviene m
                   var text = paraInCell.appendText(finalElem[key]);
                   text.setAttributes(normalStyle);
                 }
-              }
+              }*/  
+            //ANTERIOR
+            
             //}else if(j == 1){                                        //2ª celda, con la información de la cita
               
               /*var finalElem = constructObj(listaTuplasReporte[i].info);
@@ -880,11 +1058,29 @@ function constructReporte(listaTuplasReporte, estilo, body, index){ //Conviene m
                 }
               }*/
            // }
-        }   
+       /* }   
       }
       break;
     }
+  }*/
+  
+/*function ordenarPorYear(listaTuplasReporte){
+  
+}*/
+
+
+function compare(a,b) {
+  if (a.info === undefined || a.cite === undefined)return -1;
+  else if (b.info === undefined || b.cite === undefined)return 1;
+  else{
+    if (a.info.year < b.info.year)
+      return -1;
+    if (a.info.year > b.info.year)
+      return 1;
+    return 0;
   }
+}
+
 
 function constructInfo(listaTuplas, estilo, body, index, clavesNoEncontradas){
   

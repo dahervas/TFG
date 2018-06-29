@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+    <!-- The CSS package above applies Google styling to buttons and other elements. -->
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.js"></script>
+    
+    <style>
+    
+    div.success {
+      padding-top: 10px;
+      color: green;
+    }
+    
+    select.select_style{
+      padding-top: 10px;
+    }
+    
+    div.error {
+      padding-top: 10px;
+    }
+     
+    #select_file {
+      text-align: left;
+      width: 95%;
+      font-size: 1em;
+      margin: auto;
+      height: 3em;
+    }
+    
+    #select_files {
+      text-align: left;
+      font-size: 1em;
+      margin: auto;
+      width: 100%;
+      height: 20em;
+    }
+    
+    #select_file2 {
+      text-align: left;
+      width: 95%;
+      font-size: 1em;
+      margin: auto;
+      height: 3em;
+    }
+  
+    .branding-below {
+      bottom: 56px;
+      top: 0;
+    }
+
+    .branding-text {
+      left: 7px;
+      position: relative;
+      top: 3px;
+    }
+
+    .col-contain {
+      overflow: hidden;
+    }
+
+    .col-one {
+      float: left;
+      width: 50%;
+    }
+
+    .logo {
+      vertical-align: middle;
+    }
+
+    .radio-spacer {
+      height: 20px;
+    }
+
+    .width-100 {
+      width: 100%;
+    }
+    /**********************************/
+    /*
+    .scrolling-wrapper {
+      overflow-x: scroll;
+      overflow-y: hidden;
+      white-space: nowrap;
+    }
+    
+    .scrolling-wrapper-flexbox {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      position: relative;
+      top: 300px;
+    }
+    
+    .card {
+       width: 100px;
+       height: 100px;
+       background-color: red;
+       float: left;
+       margin: 5px;
+    }*/
+    
+    .infoBlock {
+      position: relative;
+      text-align:center;
+    }
+    
+    /*}*/
+    /************************************/
+    /*}*/
+      </style>
+    </head>
+    <body>
+      <div class="infoBlock">
+      <select id="selectMe">
+      <option disabled selected value="option1">Selecciona una clase para saber más información</option>
+      <!--<option selected="default"></option>-->
+      <option value="option2">@book</option>
+      <option value="option3">@article</option>
+      <option value="option4">@techreport</option>
+      <option value="option5">@misc</option>
+      </select>
+      
+      <div id="option1" class="group"> </div>
+      <div id="option2" class="group">Para libros y otros documentos más largos que deben incluir capítulos, prólogo, apéndices o incluso partes.</div>
+      <div id="option3" class="group">Para artículos académicos y otros documentos cortos que no es necesario dividir en capítulos, sino que bastan las secciones y subsecciones y sus párrafos y subpárrafos.</div>
+      <div id="option4" class="group">Se utiliza para elaborar informes técnicos. Es similar a la clase @book</div>
+      <div id="option5" class="group">Cuando las demás clases no se corresponden se utiliza esta, no tiene atributos obligatorios</div>
+      
+      </div>
+    
+      <script>
+        $(document).ready(function () {
+        $('.group').hide();
+        $('#option1').show();
+        $('#selectMe').change(function () {
+          $('.group').hide();
+          $('#'+$(this).val()).show();
+        })
+      });
+      </script>
+    </body>
+  </html>
+
+

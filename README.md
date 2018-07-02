@@ -52,3 +52,22 @@ METAS PRÓXIMAS
 -Rellenar la ventana con la información de cada tipo de documento.
 
 -Permitir una selección más variada de documentos .bib mediante un array que contenga los elementos seleccionados.
+
+=============================================
+# VERSION 1.4
+
+METAS ALCANZADAS
+
+-Ahora el report se crea con subheaders para cada tipo de entrada y estas se ordenan por año (campo *year*) en orden descendente.
+
+-Se ha añadido un desplegable y un botón a la ventana de información/nueva entrada.
+
+=============================================
+
+METAS PRÓXIMAS
+
+-Rellenar la ventana con la información de cada tipo de documento.
+
+-Posibilitar la escritura de una entrada desde la misma ventana donde se muestra la información de cada documento.
+
+-Permitir una selección más variada de documentos .bib mediante un array que contenga los elementos seleccionados.

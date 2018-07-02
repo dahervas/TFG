@@ -30,6 +30,14 @@
       height: 3em;
     }
     
+     #ficheros {
+      text-align: left;
+      width: 95%;
+      font-size: 1em;
+      margin: auto;
+      height: 3em;
+    }
+    
     #select_files {
       text-align: left;
       font-size: 1em;
@@ -115,58 +123,51 @@
   <body>
   
     <div class="sidebar branding-below">
-      <!--<ul>
-       <li onclick="this.parentNode.removeChild(this);">
-        <input type="hidden" name="ingredients[]" value="Cheese" />
-        Cheese
-       </li>
-       <li onclick="this.parentNode.removeChild(this);">
-        <input type="hidden" name="ingredients[]" value="Ham" />
-        Ham
-       </li>
-       <li onclick="this.parentNode.removeChild(this);">
-        <input type="hidden" name="ingredients[]" value="Mushrooms" />
-        Mushrooms
-       </li>
-      </ul>
-      <select onchange="selectIngredient(this);">
-       <option value="Cheese">Cheese</option>
-       <option value="Olives">Olives</option>
-       <option value="Tomato">Tomato</option>
-       <option value="Pepperoni">Pepperoni</option>
-       <option value="Pinneapple">Pinneapple</option>
-       <option value="Banana">Banana</option>
-       <option value="Pear">Pear</option>
-      </select>-->
-    
-      <form>        
-        <div class="block form-group">
-          <label for="select_file">Selecciona el documento bibtex:</label>
-          <br>
+      
+       
+      
+      
+        
+      <form>
+      
+        <ul>
+         
+        </ul>
+      
+      
+        <select onchange="selectFile(this);" id="select_file" >
+         <!--<option id="select_file"></option>Con el id me muestra todo to que hay en el Drive-->
+         
+        </select>
+        <label for="select_file">Selecciona los documentos bibtex:</label>
+        <br>
+        <!--<div class="block form-group">
+          <label for="select_file">Selecciona el documento bibtex:</label><!-- Texto de información -->
+          <!--<br>
           <select id="select_file" name="select_file"></select><!--Por el id, funciona-->
-          <p><b id="tittle" ></b></p>
+          <!--<p><b id="tittle" ></b></p>
           <p id="id"></p>
-        </div>
+        </div>-->
         
         <!--<select multiple>
           <option>opt 1 text
           <option value="opt 2 value">opt 2 text
         </select>-->
         
-        <div class="block form-group">
+        <!--<div class="block form-group">
           <label for="select_file">Selecciona otro documento bibtex:</label>
           <br>
           <select id="select_file2" name="select_file2"></select>
           <p><b id="tittle" ></b></p>
           <p id="id"></p>
-        </div>
-        
+        </div>-->
+        <br>
         <div class="block form-group">
-          <label for="select_style">Selecciona el estilo para la Bibliografía:</label>
-          <br>
           <select id="select_style" name="select_style">
             <option value="unsrt">unsrt</option>
           </select>
+          <br>
+          <label for="select_style">Selecciona el estilo para la Bibliografía:</label>
         </div>
         
         <!-- <div class="block form-group">
@@ -218,7 +219,7 @@
 
     <div class="sidebar bottom">
       <img alt="Add-on logo" class="logo" src="https://www.gstatic.com/images/branding/product/1x/translate_48dp.png" width="27" height="27">
-      <span class="gray branding-text">ALPHA v1.3</span>
+      <span class="gray branding-text">ALPHA v1.4</span>
     </div>
     
     <!--<div class="block">
@@ -260,13 +261,44 @@
       var alldata = {};
       //var alldata2 = {};
       
+      /*function selectFile(select){
+        var $ul = $(select).prev('ul');
+      
+        if($ul.find('input[value=' + $(select).val() + ']').length == 0)
+          $ul.append('<li onclick="$(this).remove();">' + '<input type="hidden" name="files[]" value="' + $(select).val() + '" /> ' 
+          + $(select).find('option[selected]').val() + '</li>');
+      
+      }*/
+      
+      function selectFile(select){
+        var $ul = $(select).prev('ul');
+         
+        if ($ul.find('input[value=' + $(select).val() + ']').length == 0)
+          $ul.append('<li onclick="$(this).remove();">' +
+            '<input type="hidden" name="select_file[]" value="' + 
+            $(select).val() + '" /> ' +
+            $(select).val() + '</li>');
+      }
+      
       /**
        * On document load, assign click handlers to each button and try to load the
        * user's origin and destination language preferences if previously set.
        */
       
       $(function(){
-        $('#info').click(showAlert);
+        /*
+          var docsBib = [];
+        
+        var files = document.getElementsByName("select_file[]"), i;
+        for(i=0; i<files.length; i++){
+          docsBib[i] = files[i].value;
+        }
+        */
+     
+        
+          $('#info').click(showAlert);
+        
+        
       });
       
       function showAlert(){
@@ -279,9 +311,40 @@
         /*google.script.run
         .withUserObject(this)
         .showInfo();*/
+        var docsBib1 = [];
+        var files1 = document.getElementsByName("select_file[]"), i;
+        for(i=0; i<files1.length; i++){
+          docsBib1[i] = files1[i].value;
+        }
+        
+        if(docsBib1[0] == null){
+          google.script.run
+          .withUserObject(this)
+          .showInfo();
+        }else{
+          google.script.run
+          .withUserObject(this)
+          .showInfo2(docsBib1[0]);
+        }
+        
+        //DocumentApp.getUi().createMenu('Información').addItem('Show information', 'showInfo').addToUi();
+        
+        //return ;
+      }
+      
+      function showAlert2(aux){
+        /*var uiInstance = UiApp.createApplication()
+        .setWidth(250)
+        .setHeight(300);
+        uiInstance.add(uiInstance.createLabel('The photograph on the dashboard taken years ago...'));
+        DocumentApp.getUi().showModelessDialog(uiInstance, 'My add-on');*/
+        
+        /*google.script.run
+        .withUserObject(this)
+        .showInfo();*/
         google.script.run
         .withUserObject(this)
-        .showInfo();
+        .showInfo(aux);
         
         //DocumentApp.getUi().createMenu('Información').addItem('Show information', 'showInfo').addToUi();
         
@@ -474,10 +537,26 @@
         $('#error').remove();
         
         var style = $('#select_style').val();
-        var id = $('#select_file').val();
-        var id2 = $('#select_file2').val();
-        var option = 1; //Opction 1 = Citar y añadir la sección de referencias
+        /*var id = $('#select_file').val();
+        var id2 = $('#select_file2').val();*/
+        //var id = '1klWk8P4l275FA2tUQcd9805rIPJKc4Tv';
+        var docsBib = [];
+        
+        var files = document.getElementsByName("select_file[]"), i;
+        for(i=0; i<files.length; i++){
+          docsBib[i] = files[i].value;
+        }
+        //var id2 = idS[0];
+        //var filesBib = document.getElementByName("files[]");
+        //var filesBib = $("#select_file").multiSelect({});
+        //var filesBib = $_POST['files'];
+        
+        var option = 1; //Opcion 1 = Citar y añadir la sección de referencias
         var filtros = [];
+        
+        /*for (i=0; i<files.length; i++){
+          filesBib[i]=files[i];
+        }*/
         
         filtros[0] = document.getElementById("filtroTipo").value;
         filtros[1] = document.getElementById("filtroYear").value;
@@ -492,7 +571,8 @@
         
         /*Para el filtro, varios input text, cada uno con un id (tipo de objeto, año, titulo... )*/
         
-        //alert(escape(filtro));
+        //alert(escape(files[0]));
+        //alert(escape(filesBib[0]));
         
     
         
@@ -519,7 +599,8 @@
           element.disabled = false;
         })
         .withUserObject(this)
-        .getBibtexAndDoc(id,id2,style,filtros, option);
+        .getBibtexAndDoc(docsBib,style,filtros, option);
+        //.getBibtexAndDoc(id,id2,style,filtros, option);
         /****************************************
         google.script.run
         .withSuccessHandler(
@@ -554,8 +635,15 @@
         $('#error').remove();
         
         var style = $('#select_style').val();
-        var id = $('#select_file').val();
-        var id2 = $('#select_file2').val();
+        /*var id = $('#select_file').val();
+        var id2 = $('#select_file2').val();*/
+        
+        var docsBib = [];
+        
+        var files = document.getElementsByName("select_file[]"), i;
+        for(i=0; i<files.length; i++){
+          docsBib[i] = files[i].value;
+        }
         var option = 2; //Opción 2 = Mostrar un reporte
         var filtros = [];
         
@@ -599,7 +687,7 @@
           element.disabled = false;
         })
         .withUserObject(this)
-        .getBibtexAndDoc(id,id2,style,filtros, option);
+        .getBibtexAndDoc(/*id,id2,*/docsBib,style,filtros,option);
         
       } 
       

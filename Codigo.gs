@@ -1,5 +1,5 @@
 /*
-       20180629
+       20180702
        TERMINAR LA FUNCION finishInfo() Y CAPTURAR EL ERROR SI NO EXISTE \bibliography
        
 */ 
@@ -43,6 +43,7 @@
 function onOpen(e) {
 
   DocumentApp.getUi().createMenu('Información').addItem('Show information', 'showInfo').addToUi();
+  DocumentApp.getUi().createMenu('Información').addItem('Show information', 'showInfo2').addToUi();
   DocumentApp.getUi().createAddonMenu()
       .addItem('Comenzar', 'showSidebar')
       .addToUi();
@@ -91,9 +92,10 @@ function showSidebar() {
 
 function showInfo() {
   var html = HtmlService.createHtmlOutputFromFile('Info')
-      .setWidth(600)
-      .setHeight(425)
-      .setSandboxMode(HtmlService.SandboxMode.IFRAME);
+  .setWidth(600)
+  .setHeight(425)
+  .setSandboxMode(HtmlService.SandboxMode.IFRAME);
+  html.append("NADA");
   DocumentApp.getUi().showModalDialog(html, 'Información');
 }
 
@@ -109,8 +111,15 @@ function showInfo() {
 * @NotOnlyCurrentDoc
 */
 
-function showInfo2(){
-  var uiInstance = UiApp.createApplication()
+function showInfo2(aux){
+
+  var html = HtmlService.createHtmlOutputFromFile('Info')
+        .setWidth(600)
+        .setHeight(425)
+        .setSandboxMode(HtmlService.SandboxMode.IFRAME);
+  html.append(aux);
+  DocumentApp.getUi().showModalDialog(html, 'Información');
+ /* var uiInstance = UiApp.createApplication()
   .setWidth(250)
   .setHeight(300);
   uiInstance.add(uiInstance.createLabel('Selecciona un documento para mostrar su información'));
@@ -119,24 +128,33 @@ function showInfo2(){
   /*uiInstance.add(uiInstance.createButton('Click me too!',
       uiInstance.createClientHandler().forEventSource().setText('Clicked!')));*/
       
-  var button = uiInstance.createButton("a button");
+  /*var button = uiInstance.createButton("a button");
   var panel = uiInstance.createAbsolutePanel();
   // add a widget at position (10, 20)
   panel.add(button, 10, 20);
   uiInstance.add(panel);
-  DocumentApp.getUi().showModelessDialog(uiInstance, 'Información');
+  DocumentApp.getUi().showModelessDialog(uiInstance, 'Información');*/
   
   //return HtmlService.createHtmlOutputFromFile('Info');
 }
 
 //FUNCION PRINCIPAL QUE QUE ES LLAMA TRAS PULSAR EL BOTON DE "combinar documentos"
 
-function getBibtexAndDoc(e, e2, estilo, filtros, option){ //e es el fichero elegido
+function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib es el array de ids de documentos (funciona)
   //init the return vars
   
   //e = "1nvTRkIZ0dbHamwv_H9ovn_uPdveB6CRo"; //utilizado para el proceso de testing
   var bibtex_dict = [];
-
+  var e = docsBib[0];
+  var e2 = docsBib[1];
+  /*var ficheros = [];
+  
+  
+  for(x=0; x < filesBib.length; x++){
+    ficheros = DriveApp.getFileById(filesBib[x]);
+  }*/
+  //var bibtex_doc = DriveApp.getFileById(filesBib[0]);
+  //var bibtex_doc2 = DriveApp.getFileById(filesBib[1]);
   var bibtex_doc = DriveApp.getFileById(e);
   var bibtex_doc2 = DriveApp.getFileById(e2);
   

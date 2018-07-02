@@ -22,7 +22,7 @@
       padding-top: 10px;
     }
      
-    #select_file {
+    #select_fileE {
       text-align: left;
       width: 95%;
       font-size: 1em;
@@ -45,6 +45,14 @@
       margin: auto;
       height: 3em;
     }
+    
+    #writeBib {
+      text-align: left;
+      width: 95%;
+      font-size: 1em;
+      margin: auto;
+      height: 3em;
+    }
   
     .branding-below {
       bottom: 56px;
@@ -56,7 +64,13 @@
       position: relative;
       top: 3px;
     }
-
+    
+    .button-add{
+      position: relative;
+      text-align: center;
+      margin-top: 25em;
+    }
+    
     .col-contain {
       overflow: hidden;
     }
@@ -106,32 +120,60 @@
       text-align:center;
     }
     
+    .infoBlock2 {
+      position: relative;
+      text-align:center;
+      margin-top: 25em;
+    }
+    
     /*}*/
     /************************************/
     /*}*/
       </style>
     </head>
     <body>
-      <div class="infoBlock">
-      <select id="selectMe">
-      <option disabled selected value="option1">Selecciona una clase para saber más información</option>
-      <!--<option selected="default"></option>-->
-      <option value="option2">@book</option>
-      <option value="option3">@article</option>
-      <option value="option4">@techreport</option>
-      <option value="option5">@misc</option>
-      </select>
-      
-      <div id="option1" class="group"> </div>
-      <div id="option2" class="group">Para libros y otros documentos más largos que deben incluir capítulos, prólogo, apéndices o incluso partes.</div>
-      <div id="option3" class="group">Para artículos académicos y otros documentos cortos que no es necesario dividir en capítulos, sino que bastan las secciones y subsecciones y sus párrafos y subpárrafos.</div>
-      <div id="option4" class="group">Se utiliza para elaborar informes técnicos. Es similar a la clase @book</div>
-      <div id="option5" class="group">Cuando las demás clases no se corresponden se utiliza esta, no tiene atributos obligatorios</div>
-      
-      </div>
     
+      <form>        
+        <div class="block form-group">
+          <label for="select_fileE">Selecciona el documento bibtex:</label>
+          <br>
+          <select id="select_fileE" name="select_fileE"></select><!--Por el id, funciona-->
+          <p><b id="tittle" ></b></p>
+          <p id="id"></p>
+        </div>
+      </form>
+      
+      <div class="infoBlock">
+        <select id="selectMe">
+          <option disabled selected value="option1">Selecciona una clase para saber más información</option>
+          <!--<option selected="default"></option>-->
+          <option value="option2">@book</option>
+          <option value="option3">@article</option>
+          <option value="option4">@techreport</option>
+          <option value="option5">@misc</option>
+        </select>
+        
+        <div id="option1" class="group"> </div>
+        <div id="option2" class="group"><input type="text" placeholder="Prueba"></div>
+        <div id="option3" class="group">Para artículos académicos y otros documentos cortos que no es necesario dividir en capítulos, sino que bastan las secciones y subsecciones y sus párrafos y subpárrafos.</div>
+        <div id="option4" class="group">Se utiliza para elaborar informes técnicos. Es similar a la clase @book</div>
+        <div id="option5" class="group">Cuando las demás clases no se corresponden se utiliza esta, no tiene atributos obligatorios</div>
+   
+      </div>
+      
+       <div class="infoBlock2" id="button-add">
+          <button class="green" id="escribe">Añadir entrada</button>
+      </div>
+      
       <script>
-        $(document).ready(function () {
+        var alldata = {};
+        
+        /*$(function() {
+          //$('#writeBib').click(writeOnBib);
+          alert(escape($('#writeBib')));
+        });*/
+        
+      $(document).ready(function () {
         $('.group').hide();
         $('#option1').show();
         $('#selectMe').change(function () {
@@ -139,6 +181,12 @@
           $('#'+$(this).val()).show();
         })
       });
+        
+      
+        
+        
+      
+      
       </script>
     </body>
   </html>

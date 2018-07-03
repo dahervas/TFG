@@ -1,5 +1,5 @@
 /*
-       20180702
+       20180703
        TERMINAR LA FUNCION finishInfo() Y CAPTURAR EL ERROR SI NO EXISTE \bibliography
        
 */ 
@@ -43,7 +43,7 @@
 function onOpen(e) {
 
   DocumentApp.getUi().createMenu('Información').addItem('Show information', 'showInfo').addToUi();
-  DocumentApp.getUi().createMenu('Información').addItem('Show information', 'showInfo2').addToUi();
+  //DocumentApp.getUi().createMenu('Información').addItem('Show information', 'showInfo2').addToUi();
   DocumentApp.getUi().createAddonMenu()
       .addItem('Comenzar', 'showSidebar')
       .addToUi();
@@ -94,9 +94,13 @@ function showInfo() {
   var html = HtmlService.createHtmlOutputFromFile('Info')
   .setWidth(600)
   .setHeight(425)
-  .setSandboxMode(HtmlService.SandboxMode.IFRAME);
-  html.append("NADA");
+  //.setSandboxMode(HtmlService.SandboxMode.IFRAME);
+  //html.append("NADA");
   DocumentApp.getUi().showModalDialog(html, 'Información');
+  
+  //var template = HtmlService.createTemplateFromFile('Info').evaluate();
+  //return template;
+  //return template.evaluate().setTitle("Información")
 }
 
 
@@ -117,8 +121,15 @@ function showInfo2(aux){
         .setWidth(600)
         .setHeight(425)
         .setSandboxMode(HtmlService.SandboxMode.IFRAME);
+  html.variable = aux;
   html.append(aux);
   DocumentApp.getUi().showModalDialog(html, 'Información');
+  
+  window.onload() = function(){
+        var variable = "HEYYYYY";
+        var documento = '1bdul7r4W5O01saLW15UlsNzclJWjhxqV605ssvl8vgQ';
+        google.script.run.pruebaEscritura(documento, variable);
+      }
  /* var uiInstance = UiApp.createApplication()
   .setWidth(250)
   .setHeight(300);
@@ -138,24 +149,116 @@ function showInfo2(aux){
   //return HtmlService.createHtmlOutputFromFile('Info');
 }
 
+/*******************************************************************************************/
+
+function pruebaEscritura(){
+   //var doc = '1lyZiocxhyFOOVq5LR6QuG7S5LPVt-IOE'; //Para testing
+   //var documento = DriveApp.getFileById(doc);
+   //var abierto = DriveApp.openById(doc);
+   
+   DriveApp.createFile("ESCRIBO", "HOLA");
+   //var fichero = DriveApp.getFileById('1SD-xCaA8-N5IPCPSOzRbn7LdUOp8jWLU');
+   //var doc = DriveApp.openById('1SD-xCaA8-N5IPCPSOzRbn7LdUOp8jWLU');
+   //var newIdDoc = fichero.makeCopy("PROBANDO").getId();
+   //var body = doc.getBody();
+   //body.appendParagraph("a paragraph");
+   /*var body = fichero.getBody();
+   body.appendParagraph("A paragraph.");
+   fichero.saveAndClose();*/
+   
+   /*var documentix = DocumentApp.openById(newIdDoc);
+   var bodix = documentix.getBody()
+   var textix = bodix.getText();
+   bodix.appendParagraph('HOLAAAAAAAAAAAAAA');
+   documentix.saveAndClose();*/
+}
+
+function doSomething(){
+  Logger.log('I was called');
+}
+
+/*******************************************************************************************/
+
 //FUNCION PRINCIPAL QUE QUE ES LLAMA TRAS PULSAR EL BOTON DE "combinar documentos"
 
 function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib es el array de ids de documentos (funciona)
   //init the return vars
   
   //e = "1nvTRkIZ0dbHamwv_H9ovn_uPdveB6CRo"; //utilizado para el proceso de testing
-  var bibtex_dict = [];
-  var e = docsBib[0];
-  var e2 = docsBib[1];
-  /*var ficheros = [];
+  var bibtex_dict = []; //FIJA
+  //var e = docsBib[0]; 
+  //var e2 = docsBib[1];
+  
+  /****************************************************/
+  
+  var documentos = []; //array de docs de Drive
+  for(i=0; i<docsBib.length; i++){
+    documentos[i] = DriveApp.getFileById(docsBib[i]);
+  }
+  
+  var objetosBib = []; //array de objetos de la clase BibTex
+  for(i=0; i<documentos.length; i++){
+    objetosBib[i] = new BibTex();
+    objetosBib[i].content = documentos[i].getBlob().getDataAsString();
+    objetosBib[i].parse();
+    
+    /*var libro = new BibTex();
+    libro.content = documentos[i].getBlob().getDataAsString();
+    libro.parse();
+    objetosBib[i] = libro;*/
+  }
+  
+  var exito = true;
+  for(i=0; i<objetosBib.length; i++){
+    var errorEncontrado = checkErrors(objetosBib[i]);
+    if(errorEncontrado){
+      exito = false;
+    }
+  }
+  
+  if(exito == true){
+    var biblioExist = checkBibliography();
+    //var reportExist = checkReport();
+  }
+  if(exito == true && biblioExist /*|| reportExist*/){
+    
+    var aux = 0;
+  
+    for(i=0; i<objetosBib.length; i++){
+      //Para documento, lo añadimos al diccionario
+      var Objeto = objetosBib[i]; //Objeto contiene todas las entradas del documento .bib correspondiente
+      
+      
+      //var aux2 = objetosBib[i].length;
+      //var total = aux + aux2;
+      
+      for(x=0; x<Objeto.data.length; x++){ //Para cada entrada del Objeto
+        
+        var autores = [];
+        autores = Objeto.data[x].author;
+        
+        if(compruebaYear(Objeto.data[x].year, filtros[1]) && compruebaTipo(Objeto.data[x].entryType, filtros[0]) && compruebaAutor(autores, filtros[2])
+         && compruebaSeries(Objeto.data[x].series, filtros[3]) && compruebaEditorial(Objeto.data[x].publisher, filtros[4])){
+          var outobj = Objeto.google(x);
+          bibtex_dict[Objeto.data[x].cite] = outobj;
+        }
+        
+      }
+      
+    }
+  }
   
   
-  for(x=0; x < filesBib.length; x++){
+  /*for(x=0; x < filesBib.length; x++){
     ficheros = DriveApp.getFileById(filesBib[x]);
   }*/
   //var bibtex_doc = DriveApp.getFileById(filesBib[0]);
   //var bibtex_doc2 = DriveApp.getFileById(filesBib[1]);
-  var bibtex_doc = DriveApp.getFileById(e);
+  
+  /****************************************************/
+  //descomentar para que siga funcionando con 2 .bib
+  
+  /*var bibtex_doc = DriveApp.getFileById(e);
   var bibtex_doc2 = DriveApp.getFileById(e2);
   
   
@@ -176,7 +279,7 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
     var biblioExist = checkBibliography();
   }
   if(!errorEncontrado && biblioExist && !errorEncontrado2){
-    /**/var aux = bibtex.data.length;
+    var aux = bibtex.data.length;
         var aux2 = bibtex2.data.length;
         var total = aux+aux2;
         var cont = 0;
@@ -186,36 +289,15 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
        var autores = [];
        autores = bibtex.data[i].author;
        /*var obj = bibtex.google(i);
-       autores = bibtex._extractAuthors(obj);*/
+       autores = bibtex._extractAuthors(obj);
        
         //bibtex.data[i].entryType == 'article' --> FUNCIONA!
        if(compruebaYear(bibtex.data[i].year, filtros[1]) && compruebaTipo(bibtex.data[i].entryType, filtros[0]) && compruebaAutor(autores, filtros[2])
          && compruebaSeries(bibtex.data[i].series, filtros[3]) && compruebaEditorial(bibtex.data[i].publisher, filtros[4])){
           var outobj = bibtex.google(i);
           bibtex_dict[bibtex.data[i].cite] = outobj;
-        }
-  
-      //if(bibtex.data[i].year >= filtros[1]){//filtro para un año
-      //if(filtros[1].indexOf("-") > -1){//rango de años
-        //var rango = filtros[1].split("-");
-        //if(bibtex.data[i].year >= rango[0] && bibtex.data[i].year <= rango[1]){
-          /*var outobj = bibtex.google(i);
-          bibtex_dict[bibtex.data[i].cite] = outobj;*/
-       // }
-      //}
-      //else if(filtros[1].indexOf(",") > -1){//rango de años
-        //var rango = filtros[1].split(",");
-      //  if(bibtex.data[i].year >= rango[0] && bibtex.data[i].year <= rango[1]){
-          /*var outobj = bibtex.google(i);
-      //    bibtex_dict[bibtex.data[i].cite] = outobj;*/
-      //  }
-      //}
-      //else{//solo un año
-        //if(bibtex.data[i].year >= filtros[1]){
-       
-      //}//else
-        
-     }//for
+        }  
+     }
    
     
     for(var j=aux; j<total; j++){
@@ -229,7 +311,9 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
       }
       cont++;
     }
-   }
+   }*/
+   /****************************************************/
+   //Lo de debajo es fijo
     
     
     var arrayCites = getCites();
@@ -581,6 +665,20 @@ function checkErrors(bibtex){
 function checkBibliography(){
   var body = DocumentApp.getActiveDocument().getBody();
   var rangeElem = body.findText("\\\\bibliography");
+  var exito;
+  
+  if(rangeElem === null){
+    exito = false;
+  }else{
+    exito = true;
+  }
+  
+  return exito;
+}
+
+function checkReport(){
+  var body = DocumentApp.getActiveDocument().getBody();
+  var rangeElem = body.findText("\\\\report");
   var exito;
   
   if(rangeElem === null){

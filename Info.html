@@ -154,7 +154,7 @@
         </select>
         
         <div id="option1" class="group"> </div>
-        <div id="option2" class="group"><input type="text" placeholder="Prueba"></div>
+        <div id="option2" class="group"><input id="dato" type="text" placeholder="Prueba"></div>
         <div id="option3" class="group">Para artículos académicos y otros documentos cortos que no es necesario dividir en capítulos, sino que bastan las secciones y subsecciones y sus párrafos y subpárrafos.</div>
         <div id="option4" class="group">Se utiliza para elaborar informes técnicos. Es similar a la clase @book</div>
         <div id="option5" class="group">Cuando las demás clases no se corresponden se utiliza esta, no tiene atributos obligatorios</div>
@@ -162,12 +162,25 @@
       </div>
       
        <div class="infoBlock2" id="button-add">
-          <button class="green" id="escribe">Añadir entrada</button>
+          <button class="green" id="escribe" >Añadir entrada</button>
       </div>
+      
       
       <script>
         var alldata = {};
         
+        $(function() {
+          $('#escribe').click(prueba);
+        });
+        
+      function prueba(){
+        var value = document.getElementById("dato").value;//$('#dato').val(); //Funcionan ambas formas
+        /*google.run.script
+        .withUserObject(this)
+        .pruebaEscritura();
+        */
+      }
+      
         /*$(function() {
           //$('#writeBib').click(writeOnBib);
           alert(escape($('#writeBib')));
@@ -181,12 +194,7 @@
           $('#'+$(this).val()).show();
         })
       });
-        
-      
-        
-        
-      
-      
+ 
       </script>
     </body>
   </html>

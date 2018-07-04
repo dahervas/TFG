@@ -71,3 +71,16 @@ METAS PRÓXIMAS
 -Posibilitar la escritura de una entrada desde la misma ventana donde se muestra la información de cada documento.
 
 -Permitir una selección más variada de documentos .bib mediante un array que contenga los elementos seleccionados.
+
+=============================================
+# VERSION 2.1
+
+METAS ALCANZADAS
+
+-Múltiples ficheros .bib añadidos cuando se seleccionan en el desplegable. Pulsando en su ID se eliminan del array.
+
+=============================================
+
+METAS PRÓXIMAS
+
+-Soporte para añadir entradas al fichero .bib

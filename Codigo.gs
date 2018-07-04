@@ -1,5 +1,5 @@
 /*
-       20180703
+       20180704(14:00)-Probar con el DriveApp-> file.setContent()
        TERMINAR LA FUNCION finishInfo() Y CAPTURAR EL ERROR SI NO EXISTE \bibliography
        
 */ 
@@ -151,12 +151,12 @@ function showInfo2(aux){
 
 /*******************************************************************************************/
 
-function pruebaEscritura(){
+function pruebaEscritura(idDoc, campos, option){
    //var doc = '1lyZiocxhyFOOVq5LR6QuG7S5LPVt-IOE'; //Para testing
    //var documento = DriveApp.getFileById(doc);
    //var abierto = DriveApp.openById(doc);
    
-   DriveApp.createFile("ESCRIBO", "HOLA");
+   //DriveApp.createFile("ESCRIBO", "HOLA");
    //var fichero = DriveApp.getFileById('1SD-xCaA8-N5IPCPSOzRbn7LdUOp8jWLU');
    //var doc = DriveApp.openById('1SD-xCaA8-N5IPCPSOzRbn7LdUOp8jWLU');
    //var newIdDoc = fichero.makeCopy("PROBANDO").getId();
@@ -171,6 +171,67 @@ function pruebaEscritura(){
    var textix = bodix.getText();
    bodix.appendParagraph('HOLAAAAAAAAAAAAAA');
    documentix.saveAndClose();*/
+   
+   //var texto = 'HEYYYYYY';
+   //return texto;
+   //var docE = DriveApp.getFileById(idDoc);
+   //var apertura = DocumentApp.openById(idDoc);
+   
+   
+   /*************/
+   //var doc = DocumentApp.openById(idDoc);
+   //var body = doc.getBody();
+   /*************/
+   
+   
+   var docBib = DriveApp.getFileById(idDoc);
+   //docBib.setContent(content)
+   
+   
+   var existe = false;
+   var exito = true;
+   
+   /*var rangeElem = body.findText(campos[0]);//Comprobamos si existe ya el ID, a lo mejor se puede hacer al pasar el doc a BibTex();
+   if(rangeElem == null){
+   }else{
+     existe = true;
+   }*/
+   //var texto = body.getText();
+   /************************************************************/
+   //Crearemos un objeto BibTex con el documento a modificar
+   var objetivo = new BibTex();
+   objetivo.content = docBib.getBlob().getDataAsString();
+   objetivo.parse();
+   var existe = false;
+   
+   for(i=0; i<objetivo.data.length; i++){
+     if(objetivo.data[i].cite == campos[0]){
+       existe = true;
+     }
+     else{
+       //objetivo.addEntry(campos[0]); //objetivo.data[objetivo.data.length] = campos[0]
+       //Comprobación de tipo de objeto
+     }
+   }
+   
+   /************************************************************/
+   if(existe){
+     exito = false;
+   }else{
+     var doc = DocumentApp.openById(idDoc);
+     var body = doc.getBody()
+     var para = body.appendParagraph("EE");
+     //var campo2 = campo.text();
+     /*var text = para.appendText(option + '{' + campos[0] + ',\n'
+      + '\tAuthor = {' + campos[1] + '},\n'
+      + '\tPublisher = {' + campos[2] + '},\n'
+      + '\tTitle = {' + campos[3] + '},\n'
+      + '\tYear = {' + campos[4] + '}\n}'
+      );*/
+     //text.setItalic(false);
+     doc.saveAndClose();
+   }
+   return exito;
 }
 
 function doSomething(){
@@ -339,7 +400,7 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
     }
   
   return exito;
-}
+ }
 
 function compruebaSeries(serieBib, dato){ //Aquellos que no tengan series, también se muestran por ser un campo poco común
   if(dato && serieBib){

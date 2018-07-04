@@ -123,7 +123,7 @@
     .infoBlock2 {
       position: relative;
       text-align:center;
-      margin-top: 25em;
+      margin-top: 12em;
     }
     
     /*}*/
@@ -143,7 +143,7 @@
         </div>
       </form>
       
-      <div class="infoBlock">
+      <div class="infoBlock" id="infoBlock">
         <select id="selectMe">
           <option disabled selected value="option1">Selecciona una clase para saber más información</option>
           <!--<option selected="default"></option>-->
@@ -152,12 +152,42 @@
           <option value="option4">@techreport</option>
           <option value="option5">@misc</option>
         </select>
-        
+        <p>*Indica campos obligatorios</p>
         <div id="option1" class="group"> </div>
-        <div id="option2" class="group"><input id="dato" type="text" placeholder="Prueba"></div>
-        <div id="option3" class="group">Para artículos académicos y otros documentos cortos que no es necesario dividir en capítulos, sino que bastan las secciones y subsecciones y sus párrafos y subpárrafos.</div>
-        <div id="option4" class="group">Se utiliza para elaborar informes técnicos. Es similar a la clase @book</div>
-        <div id="option5" class="group">Cuando las demás clases no se corresponden se utiliza esta, no tiene atributos obligatorios</div>
+        <div id="option2" class="group">
+          <input type="hidden" id="tipoEntrada" value="@book">
+          <input type="text" placeholder="*ID" name="campos[]">
+          <input type="text" placeholder="*Author" name="campos[]">
+          <input type="text" placeholder="*Title" name="campos[]">
+          <input type="text" placeholder="*Publisher" name="campos[]">
+          <input type="text" placeholder="*Year" name="campos[]">
+        </div>
+        <div id="option3" class="group">
+          <input type="hidden" id="tipoEntrada" value="@article">
+          <input type="text" placeholder="*ID" name="campos[]">
+          <input type="text" placeholder="*Author" name="campos[]">
+          <input type="text" placeholder="*Title" name="campos[]">
+          <input type="text" placeholder="*Journal" name="campos[]">
+          <input type="text" placeholder="*Year" name="campos[]">
+        </div>
+        <div id="option4" class="group">
+          <input type="hidden" id="tipoEntrada" value="@techreport">
+          <input type="text" placeholder="*ID" name="campos[]">
+          <input type="text" placeholder="*Author" name="campos[]">
+          <input type="text" placeholder="*Title" name="campos[]">
+          <input type="text" placeholder="*Institution" name="campos[]">
+          <input type="text" placeholder="*Year" name="campos[]">
+        </div>
+        <div id="option5" class="group">
+          <input type="hidden" id="tipoEntrada" value="@misc">
+          <input type="text" placeholder="*ID" name="campos[]">
+          <input type="text" placeholder="Author" name="campos[]">
+          <input type="text" placeholder="Title" name="campos[]">
+          <input type="text" placeholder="Howpublished" name="campos[]">
+          <input type="text" placeholder="Month" name="campos[]">
+          <input type="text" placeholder="Year" name="campos[]">
+          <input type="text" placeholder="Note" name="campos[]">
+        </div>
    
       </div>
       
@@ -167,24 +197,110 @@
       
       
       <script>
-        var alldata = {};
+        var alldataE = {};
         
         $(function() {
           $('#escribe').click(prueba);
         });
         
+        function probe(cadena){
+          alert(cadena);
+        }
+        
       function prueba(){
-        var value = document.getElementById("dato").value;//$('#dato').val(); //Funcionan ambas formas
+        //var value = document.getElementById("dato").value;//$('#dato').val(); //Funcionan ambas formas
         /*google.run.script
         .withUserObject(this)
         .pruebaEscritura();
         */
+        var idDoc = $('#select_fileE').val();
+        //var campo = document.getElementById("dato").value;
+        var option = $('#selectMe option:selected').text();//Guardamos la opción seleccionada
+        var campos = [];
+        var listaCampos = document.getElementsByName("campos[]"), i; //Cogemos los campos en orden
+        for(i=0; i<listaCampos.length; i++){
+          campos[i] = listaCampos[i].value;
+        }
+        /*alert(campos[0]);
+        alert(campos[1]);
+        alert(campos[2]);
+        alert(campos[3]);
+        alert(campos[4]);*/
+        //alert(option);
+        //alert(campo);
+        //alert(idDoc);
+        google.script.run
+        .withSuccessHandler(
+          function(exito, element){//probe
+            if(exito){
+              var msg = "Comprueba el documento seleccionado en tu Drive";
+              showSuccessE(msg, $('#infoBlock'));
+            }else{
+              var msg = "Ya existe una entrada con ese ID. no se ha modificado el fichero";
+              showErrorE(msg, $('#infoBlock'));
+            }
+            element.disabled = false;
+          })
+        .withFailureHandler(
+          function(msg, element) {
+            msg = "Hubo un problema durante el proceso de inclusión.";
+            showErrorE(msg, $('#infoBlock'));
+            element.disabled = false;
+          }
+        )
+        .withUserObject(this)
+        .pruebaEscritura(idDoc,campos,option);//Funciona bien
       }
       
         /*$(function() {
           //$('#writeBib').click(writeOnBib);
           alert(escape($('#writeBib')));
         });*/
+        
+        
+        $(function () {
+          google.script.run
+          .withSuccessHandler(importDataE)
+          .getFiles("root");
+          
+          $('#select_fileE').change(function(){
+            var idE = $('#select_fileE').val();
+            var dispE = $('#select_fileE option:selected').text();
+            if(~dispE.indexOf("Folder") || ~dispE.indexOf("../")){
+              $('#select_fileE > option').remove();
+              if(alldataE[idE]){
+                var datE = {};
+                datE[idE] = alldataE[idE];
+                importDataE(datE);
+                return ;
+              }
+              else{
+                google.script.run
+                .withSuccessHandler(importDataE)
+                .getFiles(idE);
+                return;
+              }
+              return;
+            }
+          });
+        });
+        
+        function importDataE(e){
+          var keyE = Object.keys(e)[0];
+          if(!alldataE[keyE]) alldataE[keyE] = e[keyE];
+          if(e[keyE]["keyparent"]){
+            $('#select_fileE').append($('<option>').html("./" + e[keyE]["keyname"]).val(keyE));
+            $('#select_fileE').append($('<option>').html("../").val(e[keyE]["keyparent"]));
+          }
+          else{
+            $('#select_fileE').append($('<option>').html("./" + e[keyE]["keyname"]).val(keyE));
+          }
+          for (var g=0; g < e[keyE]["files"].length; g++) {
+            $('#select_fileE').append($('<option>')
+              .html(e[keyE]["files"][g].mimeType == "folder" ? "[Folder]" + e[keyE]["files"][g].name : e[keyE]["files"][g].name)
+              .val(e[keyE]["files"][g].id));
+          }
+        }
         
       $(document).ready(function () {
         $('.group').hide();
@@ -194,6 +310,16 @@
           $('#'+$(this).val()).show();
         })
       });
+      
+      function showErrorE(msg, element) {
+        var div = $('<div id="error" class="error">' + msg + '</div>');
+        $(element).after(div);
+      }
+      
+      function showSuccessE(msg, element) {
+        var div = $('<div id="success" class="success">' + msg + '</div>');
+        $(element).after(div);
+      }
  
       </script>
     </body>

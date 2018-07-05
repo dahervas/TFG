@@ -1,5 +1,6 @@
 /*
-       20180704(14:00)-Probar con el DriveApp-> file.setContent()
+       20180705(14:03)-Se insertan bien en el .bib, corregido un error que hacía que en el reporte sólo estuviesen 
+       las entradas que aparecían en el documento con un \cite{foo}. Se insertan bien los techreport también, además e los article y los book
        TERMINAR LA FUNCION finishInfo() Y CAPTURAR EL ERROR SI NO EXISTE \bibliography
        
 */ 
@@ -152,41 +153,9 @@ function showInfo2(aux){
 /*******************************************************************************************/
 
 function pruebaEscritura(idDoc, campos, option){
-   //var doc = '1lyZiocxhyFOOVq5LR6QuG7S5LPVt-IOE'; //Para testing
-   //var documento = DriveApp.getFileById(doc);
-   //var abierto = DriveApp.openById(doc);
-   
-   //DriveApp.createFile("ESCRIBO", "HOLA");
-   //var fichero = DriveApp.getFileById('1SD-xCaA8-N5IPCPSOzRbn7LdUOp8jWLU');
-   //var doc = DriveApp.openById('1SD-xCaA8-N5IPCPSOzRbn7LdUOp8jWLU');
-   //var newIdDoc = fichero.makeCopy("PROBANDO").getId();
-   //var body = doc.getBody();
-   //body.appendParagraph("a paragraph");
-   /*var body = fichero.getBody();
-   body.appendParagraph("A paragraph.");
-   fichero.saveAndClose();*/
-   
-   /*var documentix = DocumentApp.openById(newIdDoc);
-   var bodix = documentix.getBody()
-   var textix = bodix.getText();
-   bodix.appendParagraph('HOLAAAAAAAAAAAAAA');
-   documentix.saveAndClose();*/
-   
-   //var texto = 'HEYYYYYY';
-   //return texto;
-   //var docE = DriveApp.getFileById(idDoc);
-   //var apertura = DocumentApp.openById(idDoc);
-   
-   
-   /*************/
-   //var doc = DocumentApp.openById(idDoc);
-   //var body = doc.getBody();
-   /*************/
-   
-   
+ 
    var docBib = DriveApp.getFileById(idDoc);
    //docBib.setContent(content)
-   
    
    var existe = false;
    var exito = true;
@@ -199,38 +168,106 @@ function pruebaEscritura(idDoc, campos, option){
    //var texto = body.getText();
    /************************************************************/
    //Crearemos un objeto BibTex con el documento a modificar
-   var objetivo = new BibTex();
-   objetivo.content = docBib.getBlob().getDataAsString();
-   objetivo.parse();
-   var existe = false;
    
-   for(i=0; i<objetivo.data.length; i++){
-     if(objetivo.data[i].cite == campos[0]){
+   var existe = false;
+   var error = false;
+   
+   var objetivo = new BibTex();
+   var objetivoComp = new BibTex();
+   objetivo.content = docBib.getBlob().getDataAsString();
+   objetivoComp.content = docBib.getBlob().getDataAsString();
+   
+   objetivoComp.parse();
+   for(i=0; i<objetivoComp.data.length; i++){
+     if(objetivoComp.data[i].cite == campos[0]){
        existe = true;
      }
-     else{
-       //objetivo.addEntry(campos[0]); //objetivo.data[objetivo.data.length] = campos[0]
-       //Comprobación de tipo de objeto
-     }
    }
    
-   /************************************************************/
    if(existe){
      exito = false;
-   }else{
-     var doc = DocumentApp.openById(idDoc);
-     var body = doc.getBody()
-     var para = body.appendParagraph("EE");
-     //var campo2 = campo.text();
-     /*var text = para.appendText(option + '{' + campos[0] + ',\n'
-      + '\tAuthor = {' + campos[1] + '},\n'
-      + '\tPublisher = {' + campos[2] + '},\n'
-      + '\tTitle = {' + campos[3] + '},\n'
-      + '\tYear = {' + campos[4] + '}\n}'
-      );*/
-     //text.setItalic(false);
-     doc.saveAndClose();
    }
+   else{
+     switch(option){
+       case "book":
+         //comprobar atributos obligatorios, para los opcionales habrá que hacer que sólo se comprueben los campos[0]-campos[4]
+         for(i=0; i<campos.length; i++){
+           if(campos[i] === null || campos[i] === undefined){
+             error = true;
+           }
+         }
+         
+         if(error){
+           exito = false;
+         }
+         else{
+           var datFin = objetivo.content + '\n\n' + '@' + option + '{' + campos[0] + ',\n  author = {' + campos[1] + '},\n  title = {'
+           + campos[2] + '},\n  publisher = {' + campos[3] + '},\n  year = {' + campos[4] + '}\n}';
+           docBib.setContent(datFin);
+         }
+         
+       break;
+       
+       case "article":
+         //comprobar atributos obligatorios
+         for(i=0; i<campos.length; i++){
+           if(campos[i] === null || campos[i] === undefined){
+             error = true;
+           }
+         }
+         
+         if(error){
+           exito = false;
+         }
+         else{
+           var datFin = objetivo.content + '\n\n' + '@' + option + ' { ' + campos[0] + ',\n  author = {' + campos[1] + '},\n  title = {'
+           + campos[2] + '},\n  journal = {' + campos[3] + '},\n  year = {' + campos[4] + '}\n}';
+           docBib.setContent(datFin);
+         }
+         
+       break;
+       
+       case "techreport":
+         //comprobar atributos obligatorios
+         for(i=0; i<campos.length; i++){
+           if(campos[i] === null || campos[i] === undefined){
+             error = true;
+           }
+         }
+         
+         if(error){
+           exito = false;
+         }
+         else{
+           var datFin = objetivo.content + '\n\n' + '@' + option + ' { ' + campos[0] + ',\n  author = {' + campos[1] + '},\n  title = {'
+           + campos[2] + '},\n  institution = {' + campos[3] + '},\n  year = {' + campos[4] + '}\n}';
+           docBib.setContent(datFin);
+         }
+         
+       break;
+       
+       case "misc":
+         /*//comprobar atributos obligatorios
+         for(i=0; i<campos.length; i++){
+           if(campos[i] === null || campos[i] === undefined){
+             error = true;
+           }
+         }
+         
+         if(error){
+           exito = false;
+         }
+         else{
+           var datFin = objetivo.content + '\n\n' + '@' + option + ' { ' + campos[0] + ',\n  Author = {' + campos[1] + '},\n  Title = {'
+           + campos[2] + '},\n  Journal = {' + campos[3] + '},\n  Year = {' + campos[4] + '}\n}';
+           docBib.setContent(datFin);
+         }*/
+         
+       break;
+     }
+   }
+ 
+   
    return exito;
 }
 
@@ -284,7 +321,8 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
   if(exito == true && biblioExist /*|| reportExist*/){
     
     var aux = 0;
-  
+    var allIdCitas = [];
+    var index = 0;
     for(i=0; i<objetosBib.length; i++){
       //Para documento, lo añadimos al diccionario
       var Objeto = objetosBib[i]; //Objeto contiene todas las entradas del documento .bib correspondiente
@@ -302,6 +340,8 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
          && compruebaSeries(Objeto.data[x].series, filtros[3]) && compruebaEditorial(Objeto.data[x].publisher, filtros[4])){
           var outobj = Objeto.google(x);
           bibtex_dict[Objeto.data[x].cite] = outobj;
+          allIdCitas[index] = Objeto.data[x].cite;
+          index++;
         }
         
       }
@@ -381,6 +421,7 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
     var arrayCitesId = getId(arrayCites);
     
     
+    
     //var textCites = getText();  // transforma el array en un texto
     
     var idDoc = DocumentApp.getActiveDocument().getId(); //id del documento abierto
@@ -396,7 +437,7 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
       exito = sustitute(arrayCites, arrayCitesId, body, bibtex_dict, doc, estilo);
     }
     else if(option == 2){
-      exito = report(arrayCitesId, bibtex_dict, doc, estilo, body);
+      exito = report(/*arrayCitesId*/allIdCitas, bibtex_dict, doc, estilo, body);
     }
   
   return exito;
@@ -689,6 +730,10 @@ function getId(solutionArray){  //obtiene todas las claves de los \cites encontr
   return newArray;
 }
 
+/*function getIdAll(){ //Obtiene las claves de todas las entradas del documento
+  var newAllArray = [];
+}*/
+
 function getText(){  //transforma todas las citas en una cadena
   var i = 0;
   var auxArray = [];
@@ -824,6 +869,12 @@ function report(arrayCitesId, bibtex_dict, doc, estilo, body2){
      listaTuplasReporte[i].info = bibtex_dict[ClaveUnitaria];
      
    }
+   /*for(i=0; i<bibtex_dict.length; i++){
+     var ClaveUnitaria = bibtex_dict[i].cite;
+     listaTuplasReporte[i] = {};
+     listaTuplasReporte[i].cite = ClaveUnitaria;
+     listaTuplasReporte[i].info = bibtex_dict[ClaveUnitaria];
+   }*/
    
    /* SECCIÓN PARA EL REPORTE DE LAS CITAS */
   

@@ -164,19 +164,19 @@
         </div>
         <div id="option3" class="group">
           <input type="hidden" id="tipoEntrada" value="@article">
-          <input type="text" placeholder="*ID" name="campos[]">
-          <input type="text" placeholder="*Author" name="campos[]">
-          <input type="text" placeholder="*Title" name="campos[]">
-          <input type="text" placeholder="*Journal" name="campos[]">
-          <input type="text" placeholder="*Year" name="campos[]">
+          <input type="text" placeholder="*ID" name="camposA[]">
+          <input type="text" placeholder="*Author" name="camposA[]">
+          <input type="text" placeholder="*Title" name="camposA[]">
+          <input type="text" placeholder="*Journal" name="camposA[]">
+          <input type="text" placeholder="*Year" name="camposA[]">
         </div>
         <div id="option4" class="group">
           <input type="hidden" id="tipoEntrada" value="@techreport">
-          <input type="text" placeholder="*ID" name="campos[]">
-          <input type="text" placeholder="*Author" name="campos[]">
-          <input type="text" placeholder="*Title" name="campos[]">
-          <input type="text" placeholder="*Institution" name="campos[]">
-          <input type="text" placeholder="*Year" name="campos[]">
+          <input type="text" placeholder="*ID" name="camposT[]">
+          <input type="text" placeholder="*Author" name="camposT[]">
+          <input type="text" placeholder="*Title" name="camposT[]">
+          <input type="text" placeholder="*Institution" name="camposT[]">
+          <input type="text" placeholder="*Year" name="camposT[]">
         </div>
         <div id="option5" class="group">
           <input type="hidden" id="tipoEntrada" value="@misc">
@@ -217,11 +217,28 @@
         //var campo = document.getElementById("dato").value;
         var option = $('#selectMe option:selected').text();//Guardamos la opción seleccionada
         var campos = [];
-        var listaCampos = document.getElementsByName("campos[]"), i; //Cogemos los campos en orden
-        for(i=0; i<listaCampos.length; i++){
-          campos[i] = listaCampos[i].value;
+        if(option == '@book'){ //así con cada tipo de entrada
+          var listaCampos = document.getElementsByName("campos[]"), i;
+          for(i=0; i<listaCampos.length; i++){
+            campos[i] = listaCampos[i].value;
+          }
         }
-        /*alert(campos[0]);
+        else if(option == '@article'){ //así con cada tipo de entrada
+          var listaCampos = document.getElementsByName("camposA[]"), i;
+          for(i=0; i<listaCampos.length; i++){
+            campos[i] = listaCampos[i].value;
+          }
+        }
+        else if(option == '@techreport'){
+          var listaCampos = document.getElementsByName("camposT[]"), i; //Cogemos los campos en orden
+          for(i=0; i<listaCampos.length; i++){
+            campos[i] = listaCampos[i].value;
+          }
+        }
+        /*
+        
+        
+        alert(campos[0]);
         alert(campos[1]);
         alert(campos[2]);
         alert(campos[3]);
@@ -229,6 +246,7 @@
         //alert(option);
         //alert(campo);
         //alert(idDoc);
+       option = option.substr(1);
         google.script.run
         .withSuccessHandler(
           function(exito, element){//probe

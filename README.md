@@ -84,3 +84,22 @@ METAS ALCANZADAS
 METAS PRÓXIMAS
 
 -Soporte para añadir entradas al fichero .bib
+
+=============================================
+# VERSION 2.2
+
+METAS ALCANZADAS
+
+-Soporte para añadir entradas a un fichero .bib (Se permiten *@book*, *@techreport* y *@article* con los campos obligatorios).
+
+-Resolución de *bugs* de cara al reporte.
+
+METAS PRÓXIMAS
+
+-Posibilidad de insertar la entrada *@misc* (se pueden poner más).
+
+-Incluir los campos opcionales.
+
+-Comprobar que existen los campos obligatorios.
+
+-[Estilizar el formulario para añadir entradas]

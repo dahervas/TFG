@@ -94,6 +94,8 @@ METAS ALCANZADAS
 
 -Resolución de *bugs* de cara al reporte.
 
+=============================================
+
 METAS PRÓXIMAS
 
 -Posibilidad de insertar la entrada *@misc* (se pueden poner más).

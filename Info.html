@@ -9,6 +9,35 @@
     
     <style>
     
+    .centered-form{
+        margin-top: 60px;
+    }
+    
+    .centered-form .panel{
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: rgba(0, 0, 0, 0.3) 20px 20px 20px;
+    }
+    
+    .button.yellow,
+    .button.share,
+    button.yellow,
+    button.share,
+    input[type="button"].yellow,
+    input[type="button"].share,
+    input[type="submit"].yellow,
+    input[type="submit"].share {
+      background: -moz-linear-gradient(top, #f1ff09, #398a00);
+      background: -ms-linear-gradient(top, #f1ff09, #398a00);
+      background: -o-linear-gradient(top, #f1ff09, #398a00);
+      background: -webkit-linear-gradient(top, #f1ff09, #398a00);
+      background: linear-gradient(top, #3d9400, #398a00);
+      border: 1px solid #29691d;
+      color: #fff;
+      text-shadow: 0 1px rgba(0, 0, 0, .1);
+    }
+    
+    
+    
     div.success {
       padding-top: 10px;
       color: green;
@@ -123,7 +152,11 @@
     .infoBlock2 {
       position: relative;
       text-align:center;
-      margin-top: 12em;
+      margin-top: 2em;
+    }
+    
+    .tableStyle {
+      display: -webkit-inline-box;
     }
     
     /*}*/
@@ -151,6 +184,18 @@
           <option value="option3">@article</option>
           <option value="option4">@techreport</option>
           <option value="option5">@misc</option>
+          <option value="option6">@booklet</option>
+          <option value="option7">@conference</option>
+          <option value="option8">@inbook</option>
+          <option value="option9">@incollection</option>
+          <option value="option10">@inproceedings</option>
+          <option value="option11">@manual</option>
+          <option value="option12">@mastersthesis</option>
+          <option value="option13">@phdthesis</option>
+          <option value="option14">@proceedings</option>
+          <option value="option15">@unpublished</option>
+          <option value="option998">PRUEBA ESTILO BOOK</option>
+          <option value="option999">PRUEBA ESTILO ARTICLE</option>
         </select>
         <p>*Indica campos obligatorios</p>
         <div id="option1" class="group"> </div>
@@ -161,6 +206,12 @@
           <input type="text" placeholder="*Title" name="campos[]">
           <input type="text" placeholder="*Publisher" name="campos[]">
           <input type="text" placeholder="*Year" name="campos[]">
+          <input type="text" placeholder="volume" name="campos[]">
+          <input type="text" placeholder="series" name="campos[]">
+          <input type="text" placeholder="address" name="campos[]">
+          <input type="text" placeholder="edition" name="campos[]">
+          <input type="text" placeholder="month" name="campos[]">
+          <input type="text" placeholder="note" name="campos[]">
         </div>
         <div id="option3" class="group">
           <input type="hidden" id="tipoEntrada" value="@article">
@@ -169,6 +220,11 @@
           <input type="text" placeholder="*Title" name="camposA[]">
           <input type="text" placeholder="*Journal" name="camposA[]">
           <input type="text" placeholder="*Year" name="camposA[]">
+          <input type="text" placeholder="volume" name="camposA[]">
+          <input type="text" placeholder="number" name="camposA[]">
+          <input type="text" placeholder="pages" name="camposA[]">
+          <input type="text" placeholder="month" name="camposA[]">
+          <input type="text" placeholder="note" name="camposA[]">
         </div>
         <div id="option4" class="group">
           <input type="hidden" id="tipoEntrada" value="@techreport">
@@ -177,19 +233,167 @@
           <input type="text" placeholder="*Title" name="camposT[]">
           <input type="text" placeholder="*Institution" name="camposT[]">
           <input type="text" placeholder="*Year" name="camposT[]">
+          <input type="text" placeholder="type" name="camposT[]">
+          <input type="text" placeholder="address" name="camposT[]">
+          <input type="text" placeholder="month" name="camposT[]">
+          <input type="text" placeholder="note" name="camposT[]">
         </div>
         <div id="option5" class="group">
           <input type="hidden" id="tipoEntrada" value="@misc">
-          <input type="text" placeholder="*ID" name="campos[]">
-          <input type="text" placeholder="Author" name="campos[]">
-          <input type="text" placeholder="Title" name="campos[]">
-          <input type="text" placeholder="Howpublished" name="campos[]">
-          <input type="text" placeholder="Month" name="campos[]">
-          <input type="text" placeholder="Year" name="campos[]">
-          <input type="text" placeholder="Note" name="campos[]">
+          <input type="text" placeholder="*ID" name="camposM[]">
+          <input type="text" placeholder="Author" name="camposM[]">
+          <input type="text" placeholder="Title" name="camposM[]">
+          <input type="text" placeholder="Howpublished" name="camposM[]">
+          <input type="text" placeholder="Month" name="camposM[]">
+          <input type="text" placeholder="Year" name="camposM[]">
+          <input type="text" placeholder="Note" name="camposM[]">
         </div>
-   
-      </div>
+        <div id="option6" class="group">
+          <input type="hidden" id="tipoEntrada" value="@booklet">
+          <input type="text" placeholder="*ID" name="camposBL[]">
+          <input type="text" placeholder="*title" name="camposBL[]">
+          <input type="text" placeholder="author" name="camposBL[]">
+          <input type="text" placeholder="howpublished" name="camposBL[]">
+          <input type="text" placeholder="address" name="camposBL[]">
+          <input type="text" placeholder="month" name="camposBL[]">
+          <input type="text" placeholder="year" name="camposBL[]">
+          <input type="text" placeholder="note" name="camposBL[]">
+        </div>
+        <div id="option7" class="group">
+          <input type="hidden" id="tipoEntrada" value="@conference">
+          <input type="text" placeholder="*ID" name="camposC[]">
+          <input type="text" placeholder="*author" name="camposC[]">
+          <input type="text" placeholder="*title" name="camposC[]">
+          <input type="text" placeholder="*booktitle" name="camposC[]">
+          <input type="text" placeholder="*year" name="camposC[]">
+          <input type="text" placeholder="editor" name="camposC[]">
+          <input type="text" placeholder="volume" name="camposC[]">
+          <input type="text" placeholder="series" name="camposC[]">
+          <input type="text" placeholder="pages" name="camposC[]">
+          <input type="text" placeholder="address" name="camposC[]">
+          <input type="text" placeholder="month" name="camposC[]">
+          <input type="text" placeholder="organization" name="camposC[]">
+          <input type="text" placeholder="publisher" name="camposC[]">
+          <input type="text" placeholder="note" name="camposC[]">
+        </div>
+        <div id="option8" class="group">
+          <input type="hidden" id="tipoEntrada" value="@inbook">
+          <input type="text" placeholder="*ID" name="camposIB[]">
+          <input type="text" placeholder="*Author" name="camposIB[]">
+          <input type="text" placeholder="*Title" name="camposIB[]">
+          <input type="text" placeholder="*Publisher" name="camposIB[]">
+          <input type="text" placeholder="*Year" name="camposIB[]">
+          <input type="text" placeholder="*Chapter" name="camposIB[]">
+          <input type="text" placeholder="volume" name="camposIB[]">
+          <input type="text" placeholder="series" name="camposIB[]">
+          <input type="text" placeholder="type" name="camposIB[]">
+          <input type="text" placeholder="address" name="camposIB[]">
+          <input type="text" placeholder="edition" name="camposIB[]">
+          <input type="text" placeholder="month" name="camposIB[]">
+          <input type="text" placeholder="note" name="camposIB[]">
+        </div>
+        <div id="option9" class="group">
+          <input type="hidden" id="tipoEntrada" value="@incollection">
+          <input type="text" placeholder="*ID" name="camposIC[]">
+          <input type="text" placeholder="*author" name="camposIC[]">
+          <input type="text" placeholder="*title" name="camposIC[]">
+          <input type="text" placeholder="*booktitle" name="camposIC[]">
+          <input type="text" placeholder="*publisher" name="camposIC[]">
+          <input type="text" placeholder="*year" name="camposIC[]">
+          <input type="text" placeholder="editor" name="camposIC[]">
+          <input type="text" placeholder="volume" name="camposIC[]">
+          <input type="text" placeholder="series" name="camposIC[]">
+          <input type="text" placeholder="type" name="camposIC[]">
+          <input type="text" placeholder="chapter" name="camposIC[]">
+          <input type="text" placeholder="pages" name="camposIC[]">
+          <input type="text" placeholder="address" name="camposIC[]">
+          <input type="text" placeholder="edition" name="camposIC[]">
+          <input type="text" placeholder="month" name="camposIC[]">
+          <input type="text" placeholder="note" name="camposIC[]">
+        </div>
+        <!--<div id="option998" class="group">
+          <div class="row">
+            <div class="tableStyle">
+              <table class="table table-bordered table-hover">
+                <tbody>
+                  <tr>
+                    <td>                   </td>
+                    <td><input type="text" placeholder="*ID" name="camposEx[]"></td>
+                    
+                    
+                    <td><button class="yellow" id="checkID" onclick="check()">check ID</button></td>
+                  </tr>
+                  <tr>
+                    <td>                   </td>
+                    <td><input type="text" placeholder="*author" name="camposEx[]"></td>
+                    <td><input type="text" placeholder="*title" name="camposEx[]"></td>
+                  </tr>
+                  <tr>
+                    <td>                   </td>
+                    <td><input type="text" placeholder="*publisher" name="camposEx[]"></td>
+                    <td><input type="text" placeholder="*year" name="camposEx[]"></td>
+                  </tr>
+                  <tr>
+                    <td>                   </td>
+                    <td><input type="text" placeholder="volume" name="camposEx[]"></td>
+                    <td><input type="text" placeholder="series" name="camposEx[]"></td>
+                  </tr>
+                  <tr>
+                    <td>                   </td>
+                    <td><input type="text" placeholder="address" name="camposEx[]"></td>
+                    <td><input type="text" placeholder="edition" name="camposEx[]"></td>
+                  </tr>
+                  <tr>
+                    <td>                   </td>
+                    <td><input type="text" placeholder="month" name="camposEx[]"></td>
+                    <td><input type="text" placeholder="note" name="camposEx[]"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          
+           </div>  
+        </div>
+        <div id="option999" class="group">
+          <div class="row">
+            <div class="tableStyle">
+              <table class="table table-bordered table-hover">
+                <tbody>
+                  <tr>
+                    <td>                   </td>
+                    <td><input type="text" placeholder="*ID" name="camposAx[]"></td>
+                    
+                    
+                    <td><button class="yellow" id="checkID" onclick="check()">check ID</button></td>
+                  </tr>
+                  <tr>
+                    <td>                   </td>
+                    <td><input type="text" placeholder="*author" name="camposAx[]"></td>
+                    <td><input type="text" placeholder="*title" name="camposAx[]"></td>
+                  </tr>
+                  <tr>
+                    <td>                   </td>
+                    <td><input type="text" placeholder="*journal" name="camposAx[]"></td>
+                    <td><input type="text" placeholder="*year" name="camposAx[]"></td>
+                  </tr>
+                  <tr>
+                    <td>                   </td>
+                    <td><input type="text" placeholder="volume" name="camposAx[]"></td>
+                    <td><input type="text" placeholder="number" name="camposAx[]"></td>
+                  </tr>
+                  <tr>
+                    <td>                   </td>
+                    <td><input type="text" placeholder="pages" name="camposAx[]"></td>
+                    <td><input type="text" placeholder="month" name="camposAx[]"></td>
+                    <td><input type="text" placeholder="note" name="camposAx[]"></td>
+                  </tr>
+                 
+                </tbody>
+              </table>
+            </div>
+          
+           </div> --> 
+        </div>
       
        <div class="infoBlock2" id="button-add">
           <button class="green" id="escribe" >Añadir entrada</button>
@@ -203,11 +407,71 @@
           $('#escribe').click(prueba);
         });
         
+        $(function() {
+          $('#checkID').click(check);
+        });
+        
         function probe(cadena){
           alert(cadena);
         }
         
+      function check(){
+        $("#success").remove();
+        this.disabled = true;
+        $('#error').remove();
+        
+        var idDoc = $('#select_fileE').val();
+        var option = $('#selectMe option:selected').text();//Guardamos la opción seleccionada
+        
+        switch(option){
+          case "@article":
+            var listaCampos = document.getElementsByName("camposAx[]"), i;
+          break;
+          case "@book":
+            var listaCampos = document.getElementsByName("camposEx[]"), i;
+          break;
+        }
+        
+        
+        /*var campos = [];
+        for(i=0; i<listaCampos.length; i++){
+          campos[i] = listaCampos[i].value;
+        }*/
+        var idToCheck = listaCampos[0].value;
+        
+        google.script.run
+        .withSuccessHandler(
+          function(exito, element){//probe
+            if(exito){
+              var msg = "Id válido";
+              //alert(msg);
+              showSuccessE(msg, $('#infoBlock'));
+            }else{
+              var msg = "Ya existe una entrada con ese ID";
+              //alert(msg);
+              showErrorE(msg, $('#infoBlock'));
+            }
+            element.disabled = false;
+          })
+        .withFailureHandler(
+          function(msg, element) {
+            msg = "Hubo un problema durante el proceso de comprobación.";
+            //alert(msg);
+            showErrorE(msg, $('#infoBlock'));
+            element.disabled = false;
+          }
+        )
+        .withUserObject(this)
+        .compruebaId(idDoc,idToCheck);
+        
+        
+      }
+        
       function prueba(){
+      
+        $("#success").remove();
+        this.disabled = true;
+        $('#error').remove();
         //var value = document.getElementById("dato").value;//$('#dato').val(); //Funcionan ambas formas
         /*google.run.script
         .withUserObject(this)
@@ -235,15 +499,45 @@
             campos[i] = listaCampos[i].value;
           }
         }
-        /*
+        else if(option == '@misc'){
+          var listaCampos = document.getElementsByName("camposM[]"), i; //Cogemos los campos en orden
+          for(i=0; i<listaCampos.length; i++){
+            campos[i] = listaCampos[i].value;
+          }
+        }
+        else if(option == '@booklet'){
+          var listaCampos = document.getElementsByName("camposBL[]"), i; //Cogemos los campos en orden
+          for(i=0; i<listaCampos.length; i++){
+            campos[i] = listaCampos[i].value;
+          }
+        }
+        else if(option == '@conference'){
+          var listaCampos = document.getElementsByName("camposC[]"), i; //Cogemos los campos en orden
+          for(i=0; i<listaCampos.length; i++){
+            campos[i] = listaCampos[i].value;
+          }
+        }
+        else if(option == '@inbook'){
+          var listaCampos = document.getElementsByName("camposIB[]"), i; //Cogemos los campos en orden
+          for(i=0; i<listaCampos.length; i++){
+            campos[i] = listaCampos[i].value;
+          }
+        }
+        else if(option == '@incollection'){
+          var listaCampos = document.getElementsByName("camposIC[]"), i; //Cogemos los campos en orden
+          for(i=0; i<listaCampos.length; i++){
+            campos[i] = listaCampos[i].value;
+          }
+        }
         
         
-        alert(campos[0]);
+        
+        /*alert(campos[0]);
         alert(campos[1]);
         alert(campos[2]);
         alert(campos[3]);
         alert(campos[4]);*/
-        //alert(option);
+        
         //alert(campo);
         //alert(idDoc);
        option = option.substr(1);
@@ -254,7 +548,7 @@
               var msg = "Comprueba el documento seleccionado en tu Drive";
               showSuccessE(msg, $('#infoBlock'));
             }else{
-              var msg = "Ya existe una entrada con ese ID. no se ha modificado el fichero";
+              var msg = "Ya existe una entrada con ese ID o falta algún campo obligatorio. No se ha modificado el fichero";
               showErrorE(msg, $('#infoBlock'));
             }
             element.disabled = false;

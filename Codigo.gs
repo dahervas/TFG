@@ -1,8 +1,5 @@
 /*
-       20180707(13:57)-Ya inserta el @misc también y los campos opcionales y comprueba los obligatorios (que no sean vacío). 
-       Buscar un mejor estilo para las entradas del formulario.
-       Tabla de prueba en el formulario
-       [ok]Comprobación mediante botón de un ID
+       20180708(02:28)-Entradas que estén en el construct info para añadir y mirar cómo hace eso para generarlas bien en el reporte
       
        
 */ 
@@ -553,6 +550,171 @@ function pruebaEscritura(idDoc, campos, option){
          
        break;
        //inproceedings
+       case "inproceedings":
+          for(i=0; i<5; i++){
+           if(campos[i] == "" || campos[i] === undefined){
+             fallo = true;
+           }
+         }
+         
+         if(fallo == true){
+           exito = false;
+         }
+         else{
+           var datFin = objetivo.content + '\n\n' + '@' + option + '{' + campos[0] + ',\n  author={' + campos[1] + '},\n  title={' + campos[2] 
+           + '},\n  booktitle={' + campos[3] + '},\n  year={' + campos[4] + '}';
+           //Campos opcionales
+           if(campos[5]){
+             datFin = datFin + ',\n  editor={' + campos[5] + '}';
+           }
+           if(campos[6]){
+             datFin = datFin + ',\n  volume={' + campos[6] + '}';
+           }
+           if(campos[7]){
+             datFin = datFin + ',\n  series={' + campos[7] + '}';
+           }
+           if(campos[8]){
+             datFin = datFin + ',\n  pages={' + campos[8] + '}';
+           }
+           if(campos[9]){
+             datFin = datFin + ',\n  address={' + campos[9] + '}';
+           }
+           if(campos[10]){
+             datFin = datFin + ',\n  month={' + campos[10] + '}';
+           }
+           if(campos[11]){
+             datFin = datFin + ',\n  organization={' + campos[11] + '}';
+           }
+           if(campos[12]){
+             datFin = datFin + ',\n  publisher={' + campos[12] + '}';
+           }
+           if(campos[13]){
+             datFin = datFin + ',\n  note={' + campos[13] + '}';
+           }
+           
+           datFin = datFin + '\n}';
+           
+           docBib.setContent(datFin);
+         }
+         
+         
+       break;
+       
+       case "mastersthesis":
+         //comprobar atributos obligatorios
+         for(i=0; i<5; i++){
+           if(campos[i] == "" || campos[i] === undefined){
+             fallo = true;
+           }
+         }
+         
+         if(fallo == true){
+           exito = false;
+         }
+         else{
+           var datFin = objetivo.content + '\n\n' + '@' + option + '{' + campos[0] + ',\n   author={' + campos[1] + '},\n   title={'
+           + campos[2] + '},\n   school={' + campos[3] + '},\n   year={' + campos[4] + '}';
+           //Campos opcionales
+           if(campos[5]){
+             datFin = datFin + ',\n   type={' + campos[5] + '}';
+           }
+           if(campos[6]){
+             datFin = datFin + ',\n   address={' + campos[6] + '}';
+           }
+           if(campos[7]){
+             datFin = datFin + ',\n   month={' + campos[7] + '}';
+           }
+           if(campos[8]){
+             datFin = datFin + ',\n   note={' + campos[8] + '}';
+           }
+           datFin = datFin + '\n}';
+           
+           docBib.setContent(datFin);
+         }
+         
+       break;
+       
+       case "phdthesis":
+         //comprobar atributos obligatorios
+         for(i=0; i<5; i++){
+           if(campos[i] == "" || campos[i] === undefined){
+             fallo = true;
+           }
+         }
+         
+         if(fallo == true){
+           exito = false;
+         }
+         else{
+           var datFin = objetivo.content + '\n\n' + '@' + option + '{' + campos[0] + ',\n   author={' + campos[1] + '},\n   title={'
+           + campos[2] + '},\n   school={' + campos[3] + '},\n   year={' + campos[4] + '}';
+           //Campos opcionales
+           if(campos[5]){
+             datFin = datFin + ',\n   type={' + campos[5] + '}';
+           }
+           if(campos[6]){
+             datFin = datFin + ',\n   address={' + campos[6] + '}';
+           }
+           if(campos[7]){
+             datFin = datFin + ',\n   month={' + campos[7] + '}';
+           }
+           if(campos[8]){
+             datFin = datFin + ',\n   note={' + campos[8] + '}';
+           }
+           datFin = datFin + '\n}';
+           
+           docBib.setContent(datFin);
+         }
+         
+       break;
+       
+       case "proceedings":
+          for(i=0; i<3; i++){
+           if(campos[i] == "" || campos[i] === undefined){
+             fallo = true;
+           }
+         }
+         
+         if(fallo == true){
+           exito = false;
+         }
+         else{
+           var datFin = objetivo.content + '\n\n' + '@' + option + '{' + campos[0] + ',\n  title={' + campos[1] + '},\n  year={' + campos[2] 
+           + '}';
+           //Campos opcionales
+           if(campos[3]){
+             datFin = datFin + ',\n  editor={' + campos[3] + '}';
+           }
+           if(campos[4]){
+             datFin = datFin + ',\n  volume={' + campos[4] + '}';
+           }
+           if(campos[5]){
+             datFin = datFin + ',\n  series={' + campos[5] + '}';
+           }
+           if(campos[6]){
+             datFin = datFin + ',\n  address={' + campos[6] + '}';
+           }
+           if(campos[7]){
+             datFin = datFin + ',\n  month={' + campos[7] + '}';
+           }
+           if(campos[8]){
+             datFin = datFin + ',\n  organization={' + campos[8] + '}';
+           }
+           if(campos[9]){
+             datFin = datFin + ',\n  publisher={' + campos[9] + '}';
+           }
+           if(campos[10]){
+             datFin = datFin + ',\n  note={' + campos[10] + '}';
+           }
+           
+           
+           datFin = datFin + '\n}';
+           
+           docBib.setContent(datFin);
+         }
+         
+         
+       break;
      }
    }
  
@@ -1822,7 +1984,7 @@ function constructObj(info){
       Required fields: title.
       Optional fields: author, howpublished, address, month, year, note.
       */
-      var obj = {title: "", authors: "", howpublished: "", address: "", month: "", year: "", note: "", entryType: "booklet"};
+      var obj = {authors: "", title: "", howpublished: "", address: "", month: "", year: "", note: "", entryType: "booklet"};
          
       break;
     case 'conference':
@@ -1895,6 +2057,14 @@ function constructObj(info){
       Optional fields: editor, volume or number, series, pages, address, month, organization, publisher, note.
       */
       var obj = {authors: "", title: "", booktitle: "", editor: "", volume: "", series: "", pages: "", address: "", month: "", year: "", organization: "", publisher: "", note: "", entryType: "inproceedings"}
+      
+    break;
+    case 'incollection':
+      /*
+      Required fields: author, title, booktitle, publisher, year.
+      Optional fields: editor, volume or number, series, type, chapter, pages, address, edition, month, note.
+      */
+      var obj = {authors: "", title: "", booktitle: "", publisher: "", editor: "", volume: "", series: "", type: "", chapter: "", pages: "", address: "", month: "", year: "", edition: "", note: "", entryType: "incollection"}
       
     break;
     case 'proceedings':
@@ -2047,6 +2217,13 @@ function finishInfo(obj){
             delete obj['pages'];
           }
         }
+      }
+      
+    break;
+    case "booklet":
+      
+      if(obj.type == ""){
+        obj.type = "Booklet";
       }
       
     break;
@@ -4141,7 +4318,7 @@ BibTex.prototype = {
        }else{
          exito = false;
        }       
-     }else if(entry['entryType'] != "proceedings"){
+     }else if(entry['entryType'] != "proceedings" && entry['entryType'] != "booklet" ){
        if (array_key_exists('author', entry)) { 
            ret.authors = entry['author'];                //AUTHOR
        }else{
@@ -4186,10 +4363,53 @@ BibTex.prototype = {
          exito = false;
        }
      }
+     /*************************************************************/
+     if (entry['entryType'] == "conference") {
+       if(array_key_exists('booktitle', entry)){
+         ret.booktitle = this._unwrap(entry['booktitle']);    // conference --> booktitle
+       }
+       else{
+         exito = false;
+       }
+     }
      
+     if (entry['entryType'] == "inbook") {
+       if(array_key_exists('chapter', entry)){
+         ret.chapter = this._unwrap(entry['chapter']);    // inbook --> chapter
+       }
+       else{
+         exito = false;
+       }
+     }
      
+     if (entry['entryType'] == "inbook") {
+       if(array_key_exists('publisher', entry)){
+         ret.publisher = this._unwrap(entry['publisher']);    // inbook --> publisher
+       }
+       else{
+         exito = false;
+       }
+     }
      
+     if (entry['entryType'] == "incollection") {
+       if(array_key_exists('booktitle', entry)){
+         ret.booktitle = this._unwrap(entry['booktitle']);    // incollection --> booktitle
+       }
+       else{
+         exito = false;
+       }
+     }
      
+     if (entry['entryType'] == "incollection") {
+       if(array_key_exists('publisher', entry)){
+         ret.publisher = this._unwrap(entry['publisher']);    // incollection --> publisher
+       }
+       else{
+         exito = false;
+       }
+     }
+     
+     /*************************************************************/
      if (entry['entryType'] == "book") {
        if(array_key_exists('publisher', entry)){
          ret.publisher = this._unwrap(entry['publisher']);    // BOOK --> PUBLISHER
@@ -4209,11 +4429,13 @@ BibTex.prototype = {
        }
      }   
      
-     if (array_key_exists('year', entry)) {
-       ret.year = this._unwrap(entry['year']);               //YEAR
-     }
-     else{
-       exito = false;
+     if(entry['entryType'] != "booklet"){
+       if (array_key_exists('year', entry)) {
+         ret.year = this._unwrap(entry['year']);               //YEAR
+       }
+       else{
+         exito = false;
+       }
      }
     
      return exito;
@@ -4463,6 +4685,71 @@ BibTex.prototype = {
             
           }
         break;
+        
+        case "booklet":
+          //Required fields: title.
+          //Optional fields: author, howpublished, address, month, year, note
+          var exito = this.checkRequieredFields(entry, ret);
+          ret.exito = exito;
+          
+          if(exito){
+            if (array_key_exists('author', entry)) {
+              ret.authors = entry['author'];
+            }
+            if (array_key_exists('year', entry)) {
+              ret.year = this._unwrap(entry['year']);
+            }
+            if (array_key_exists('month', entry)) {          
+                var month = this._unwrap(entry['month']);
+                month = this.transformMonth(month);
+                ret.month = month;
+            }
+            if (array_key_exists('note', entry)) {
+              ret.note = this._unwrap(entry['note']);   
+            } 
+            if (array_key_exists('howpublished', entry)) {
+              ret.howpublished = this._unwrap(entry['howpublished']);
+            }
+            if (array_key_exists('address', entry)) {
+              ret.address = this._unwrap(entry['address']);
+            }
+          }
+          
+        break;
+        
+        case "inbook":
+          //Required fields: author, title, chapter, publisher, year.
+          //Optional fields: volume, series, type, address, edition, month, note
+          var exito = this.checkRequieredFields(entry, ret);
+          ret.exito = exito;
+          
+          if(exito){
+            if (array_key_exists('volume', entry)) {
+              ret.volume = this.unwrap(entry['volume']);
+            }
+            if (array_key_exists('series', entry)) {
+              ret.series = this._unwrap(entry['series']);
+            }
+            if (array_key_exists('type', entry)) {          
+              ret.type = this._unwrap(entry['type']);
+            }
+            if (array_key_exists('note', entry)) {
+              ret.note = this._unwrap(entry['note']);   
+            }
+            if (array_key_exists('month', entry)) {
+              var month = this._unwrap(entry['month']);
+              month = this.transformMonth(month);
+              ret.month = month;   
+            } 
+            if (array_key_exists('edition', entry)) {
+              ret.edition = this._unwrap(entry['edition']);
+            }
+            if (array_key_exists('address', entry)) {
+              ret.address = this._unwrap(entry['address']);
+            }
+          }
+          
+        break;
           
         case "misc":
           
@@ -4602,8 +4889,48 @@ BibTex.prototype = {
           }
           
         break;
+        
+        case "incollection":
+          
+          //Required fields: author, title, booktitle, publisher, year
+          
+          var exito = this.checkRequieredFields(entry, ret);
+          ret.exito = exito;
+         
+          if(exito){            
+            ret = this.checkOptionalFieldsProceeding(entry, ret);
+            
+            if (array_key_exists('type', entry)) {
+              ret.type = this._unwrap(entry['type']);
+            }
+            if (array_key_exists('chapter', entry)) {
+              ret.chapter = this._unwrap(entry['chapter']);
+            }
+            if (array_key_exists('edition', entry)) {
+              ret.edition = this._unwrap(entry['edition']);
+            }
+          }
+          
+        break;
           
         case "inproceedings":
+          
+          //Required fields: author, title, booktitle, year
+          
+          var exito = this.checkRequieredFields(entry, ret);
+          ret.exito = exito;
+         
+          if(exito){            
+            ret = this.checkOptionalFieldsProceeding(entry, ret);
+            
+            if (array_key_exists('pages', entry)) {
+              ret.pages = this._unwrap(entry['pages']);
+            }
+          }
+          
+        break;
+        
+        case "conference":
           
           //Required fields: author, title, booktitle, year
           

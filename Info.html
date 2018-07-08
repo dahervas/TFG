@@ -189,13 +189,13 @@
           <option value="option8">@inbook</option>
           <option value="option9">@incollection</option>
           <option value="option10">@inproceedings</option>
-          <option value="option11">@manual</option>
+          <!--<option value="option11">@manual</option>-->
           <option value="option12">@mastersthesis</option>
           <option value="option13">@phdthesis</option>
           <option value="option14">@proceedings</option>
-          <option value="option15">@unpublished</option>
+          <!--<option value="option15">@unpublished</option>
           <option value="option998">PRUEBA ESTILO BOOK</option>
-          <option value="option999">PRUEBA ESTILO ARTICLE</option>
+          <option value="option999">PRUEBA ESTILO ARTICLE</option>-->
         </select>
         <p>*Indica campos obligatorios</p>
         <div id="option1" class="group"> </div>
@@ -281,9 +281,9 @@
           <input type="text" placeholder="*ID" name="camposIB[]">
           <input type="text" placeholder="*Author" name="camposIB[]">
           <input type="text" placeholder="*Title" name="camposIB[]">
+          <input type="text" placeholder="*Chapter" name="camposIB[]">
           <input type="text" placeholder="*Publisher" name="camposIB[]">
           <input type="text" placeholder="*Year" name="camposIB[]">
-          <input type="text" placeholder="*Chapter" name="camposIB[]">
           <input type="text" placeholder="volume" name="camposIB[]">
           <input type="text" placeholder="series" name="camposIB[]">
           <input type="text" placeholder="type" name="camposIB[]">
@@ -311,7 +311,62 @@
           <input type="text" placeholder="month" name="camposIC[]">
           <input type="text" placeholder="note" name="camposIC[]">
         </div>
-        <!--<div id="option998" class="group">
+        <div id="option10" class="group">
+          <input type="hidden" id="tipoEntrada" value="@inproceedings">
+          <input type="text" placeholder="*ID" name="camposIP[]">
+          <input type="text" placeholder="*author" name="camposIP[]">
+          <input type="text" placeholder="*title" name="camposIP[]">
+          <input type="text" placeholder="*booktitle" name="camposIP[]">
+          <input type="text" placeholder="*year" name="camposIP[]">
+          <input type="text" placeholder="editor" name="camposIP[]">
+          <input type="text" placeholder="volume" name="camposIP[]">
+          <input type="text" placeholder="series" name="camposIP[]">
+          <input type="text" placeholder="pages" name="camposIP[]">
+          <input type="text" placeholder="address" name="camposIP[]">
+          <input type="text" placeholder="month" name="camposIP[]">
+          <input type="text" placeholder="organization" name="camposIP[]">
+          <input type="text" placeholder="publisher" name="camposIP[]">
+          <input type="text" placeholder="note" name="camposIP[]">
+        </div>
+        <div id="option12" class="group">
+          <input type="hidden" id="tipoEntrada" value="@mastersthesis">
+          <input type="text" placeholder="*ID" name="camposMS[]">
+          <input type="text" placeholder="*author" name="camposMS[]">
+          <input type="text" placeholder="*title" name="camposMS[]">
+          <input type="text" placeholder="*school" name="camposMS[]">
+          <input type="text" placeholder="*year" name="camposMS[]">
+          <input type="text" placeholder="type" name="camposMS[]">
+          <input type="text" placeholder="address" name="camposMS[]">
+          <input type="text" placeholder="month" name="camposMS[]">
+          <input type="text" placeholder="note" name="camposMS[]">
+        </div>
+        <div id="option13" class="group">
+          <input type="hidden" id="tipoEntrada" value="@phdthesis">
+          <input type="text" placeholder="*ID" name="camposPT[]">
+          <input type="text" placeholder="*author" name="camposPT[]">
+          <input type="text" placeholder="*title" name="camposPT[]">
+          <input type="text" placeholder="*school" name="camposPT[]">
+          <input type="text" placeholder="*year" name="camposPT[]">
+          <input type="text" placeholder="type" name="camposPT[]">
+          <input type="text" placeholder="address" name="camposPT[]">
+          <input type="text" placeholder="month" name="camposPT[]">
+          <input type="text" placeholder="note" name="camposPT[]">
+        </div>
+        <div id="option14" class="group">
+          <input type="hidden" id="tipoEntrada" value="@proceedings">
+          <input type="text" placeholder="*ID" name="camposPR[]">
+          <input type="text" placeholder="*title" name="camposPR[]">
+          <input type="text" placeholder="*year" name="camposPR[]">
+          <input type="text" placeholder="editor" name="camposPR[]">
+          <input type="text" placeholder="volume" name="camposPR[]">
+          <input type="text" placeholder="series" name="camposPR[]">
+          <input type="text" placeholder="address" name="camposPR[]">
+          <input type="text" placeholder="month" name="camposPR[]">
+          <input type="text" placeholder="organization" name="camposPR[]">
+          <input type="text" placeholder="publisher" name="camposPR[]">
+          <input type="text" placeholder="note" name="camposPR[]">
+        </div>
+        <div id="option998" class="group">
           <div class="row">
             <div class="tableStyle">
               <table class="table table-bordered table-hover">
@@ -354,7 +409,7 @@
           
            </div>  
         </div>
-        <div id="option999" class="group">
+        <!--<div id="option999" class="group">
           <div class="row">
             <div class="tableStyle">
               <table class="table table-bordered table-hover">
@@ -525,6 +580,30 @@
         }
         else if(option == '@incollection'){
           var listaCampos = document.getElementsByName("camposIC[]"), i; //Cogemos los campos en orden
+          for(i=0; i<listaCampos.length; i++){
+            campos[i] = listaCampos[i].value;
+          }
+        }
+        else if(option == '@inproceedings'){
+          var listaCampos = document.getElementsByName("camposIP[]"), i; //Cogemos los campos en orden
+          for(i=0; i<listaCampos.length; i++){
+            campos[i] = listaCampos[i].value;
+          }
+        }
+        else if(option == '@mastersthesis'){
+          var listaCampos = document.getElementsByName("camposMS[]"), i; //Cogemos los campos en orden
+          for(i=0; i<listaCampos.length; i++){
+            campos[i] = listaCampos[i].value;
+          }
+        }
+        else if(option == '@phdthesis'){
+          var listaCampos = document.getElementsByName("camposPT[]"), i; //Cogemos los campos en orden
+          for(i=0; i<listaCampos.length; i++){
+            campos[i] = listaCampos[i].value;
+          }
+        }
+        else if(option == '@proceedings'){
+          var listaCampos = document.getElementsByName("camposPR[]"), i; //Cogemos los campos en orden
           for(i=0; i<listaCampos.length; i++){
             campos[i] = listaCampos[i].value;
           }

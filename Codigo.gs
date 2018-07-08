@@ -1,5 +1,5 @@
 /*
-       20180708(02:28)-Entradas que estén en el construct info para añadir y mirar cómo hace eso para generarlas bien en el reporte
+       20180708(21:53)-En principio ya está funcionando bien.
       
        
 */ 

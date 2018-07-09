@@ -111,7 +111,7 @@ METAS PRÓXIMAS
 
 METAS ALCANZADAS
 
--Soporte para entradas de tipo *article, book, booklet, conference, inbook, incollection, inproceedings, mastersthesis, misc, phdthesis, proceedings y techreport.
+-Soporte para entradas de tipo *article, book, booklet, conference, inbook, incollection, inproceedings, mastersthesis, misc, phdthesis, proceedings y techreport*.
 
 -Incluídos campos opcionales de las entradas anteriores.
 

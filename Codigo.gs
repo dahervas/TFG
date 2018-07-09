@@ -1,5 +1,5 @@
 /*
-       20180708(21:53)-En principio ya está funcionando bien.
+       20180709(10:28)-(Reunión)En principio ya está funcionando bien.
       
        
 */ 

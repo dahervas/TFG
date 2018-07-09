@@ -105,3 +105,24 @@ METAS PRÓXIMAS
 -Comprobar que existen los campos obligatorios.
 
 -[Estilizar el formulario para añadir entradas]
+
+=============================================
+# VERSION 2.3
+
+METAS ALCANZADAS
+
+-Soporte para entradas de tipo *article, book, booklet, conference, inbook, incollection, inproceedings, mastersthesis, misc, phdthesis, proceedings y techreport.
+
+-Incluídos campos opcionales de las entradas anteriores.
+
+-Incluídas comprobaciones de campos obligatorios e IDs no repetidos.
+
+-Resolución de *bugs* de cara a la inclusión de nuevas entradas y su adición al reporte.
+
+=============================================
+
+METAS PRÓXIMAS
+
+-[Estilizar el formulario para añadir entradas]
+
+-[Posibilidad de incluir un botón para comprobar ,previamente a intentar añadir, si existe el ID introducido.]

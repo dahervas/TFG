@@ -767,9 +767,9 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
   
   if(exito == true){
     var biblioExist = checkBibliography();
-    //var reportExist = checkReport();
+    var reportExist = checkReport();
   }
-  if(exito == true && biblioExist /*|| reportExist*/){
+  if((exito == true && biblioExist) || (exito == true && reportExist)){
     
     var aux = 0;
     var allIdCitas = [];

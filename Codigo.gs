@@ -867,10 +867,10 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
    /****************************************************/
    //Lo de debajo es fijo
     
-    
-    var arrayCites = getCites();
-    var arrayCitesId = getId(arrayCites);
-    
+    if(option == 1){
+       var arrayCites = getCites();
+       var arrayCitesId = getId(arrayCites);
+    }
     
     
     //var textCites = getText();  // transforma el array en un texto

@@ -1,6 +1,10 @@
 /*
-       20180709(11:06)-(Reunión)En principio ya está funcionando bien.
-      
+       20180710(14:30)-Si el primer archivo elegido tiene 2 o más documentos de un autor, entonces se muestran bien con filtro para ese autor.
+       OJO con el AND, algo raro pasa con ese filtro y no me gusta nada.
+       -Ya se muestran los nombres de los archivos y no se muestran las carpetas.
+       -Añadido un radio para eliminar los elementos más fácilmente
+       -Cambia el nombre por 'Nombre actual'-Report
+       -Utiliza trim() para los años/rango de años
        
 */ 
 
@@ -73,7 +77,7 @@ function onInstall(e) {
  */
 function showSidebar() {
   var ui = HtmlService.createHtmlOutputFromFile('Sidebar')
-      .setTitle('Combinación de Documentos');
+      .setTitle('Gestor Bibliográfico');
       
   //var info = HtmlService.createHtmlOutput('Info').setTitle('Información');
   DocumentApp.getUi().showSidebar(ui);
@@ -722,8 +726,13 @@ function pruebaEscritura(idDoc, campos, option){
    return exito;
 }
 
-function doSomething(){
-  Logger.log('I was called');
+function nombreDocumento(){
+  var actual = DocumentApp.getActiveDocument().getId();
+  var docDrive = DriveApp.getFileById(actual);
+  var nombre = docDrive.getName();
+  
+  
+  return nombre;
 }
 
 /*******************************************************************************************/
@@ -737,7 +746,15 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
   var bibtex_dict = []; //FIJA
   //var e = docsBib[0]; 
   //var e2 = docsBib[1];
-  
+  //1klWk8P4l275FA2tUQcd9805rIPJKc4Tv
+  //1UhHmfUbnoE5Ls8ecNDN1z1gZj5SDBsx_
+  /*var estilo = 'unsrt';
+  var filtros = [];
+  filtros[2] = "David"
+  var option = '2'
+  var documentos = [];
+  documentos[1] = DriveApp.getFileById('1UhHmfUbnoE5Ls8ecNDN1z1gZj5SDBsx_');
+  documentos[0] = DriveApp.getFileById('1klWk8P4l275FA2tUQcd9805rIPJKc4Tv');*/
   /****************************************************/
   
   var documentos = []; //array de docs de Drive
@@ -781,13 +798,14 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
       
       //var aux2 = objetosBib[i].length;
       //var total = aux + aux2;
-      
+      var autores = [];
       for(x=0; x<Objeto.data.length; x++){ //Para cada entrada del Objeto
         
-        var autores = [];
-        autores = Objeto.data[x].author;
         
-        if(compruebaYear(Objeto.data[x].year, filtros[1]) && compruebaTipo(Objeto.data[x].entryType, filtros[0]) && compruebaAutor(autores, filtros[2])
+        autores[x] = Objeto.data[x].author;
+        //aux++;
+        
+        if(compruebaYear(Objeto.data[x].year, filtros[1]) && compruebaTipo(Objeto.data[x].entryType, filtros[0]) && compruebaAutor(autores[x], filtros[2])
          && compruebaSeries(Objeto.data[x].series, filtros[3]) && compruebaEditorial(Objeto.data[x].publisher, filtros[4])){
           var outobj = Objeto.google(x);
           bibtex_dict[Objeto.data[x].cite] = outobj;
@@ -878,16 +896,27 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
     var idDoc = DocumentApp.getActiveDocument().getId(); //id del documento abierto
     
     var file = DriveApp.getFileById(idDoc); //archivo que representa el doc abierto
-    var newIdDoc = file.makeCopy("New Document").getId(); //copia del documento, renombrandolo y obteniendo su id
+    /*var newIdDoc = file.makeCopy("New Document").getId(); //copia del documento, renombrandolo y obteniendo su id
     //var newFile = DriveApp.getFileById(newIdDoc);
     var doc = DocumentApp.openById(newIdDoc);
     var body = doc.getBody();
-    var texto = body.getText();
+    var texto = body.getText();*/
     
     if(option == 1){
+      var newIdDoc = file.makeCopy("New Document").getId(); //copia del documento, renombrandolo y obteniendo su id
+      //var newFile = DriveApp.getFileById(newIdDoc);
+      var doc = DocumentApp.openById(newIdDoc);
+      var body = doc.getBody();
+      var texto = body.getText();
       exito = sustitute(arrayCites, arrayCitesId, body, bibtex_dict, doc, estilo);
     }
     else if(option == 2){
+      var nombre = file.getName();
+      var newIdDoc = file.makeCopy(nombre+"-Report").getId(); //copia del documento, renombrandolo y obteniendo su id
+      //var newFile = DriveApp.getFileById(newIdDoc);
+      var doc = DocumentApp.openById(newIdDoc);
+      var body = doc.getBody();
+      var texto = body.getText();
       exito = report(/*arrayCitesId*/allIdCitas, bibtex_dict, doc, estilo, body);
     }
   
@@ -968,11 +997,14 @@ function compruebaYear(yearBib, dato){
       for(i=0; i<subFiltro.length; i++){
         if(subFiltro[i].indexOf("-") > -1){ //tenemos una franja
           var rango = subFiltro[i].split("-"); //separamos la franja
+          rango[0] = rango[0].trim();
+          rango[1] = rango[1].trim();
           if(yearBib >= rango[0] && yearBib <= rango[1]){
             return true;
           }
         }
         else{ //tenemos un año
+          subFiltro[i] = subFiltro[i].trim();
           if(subFiltro[i] == yearBib){
             return true;
           }
@@ -983,12 +1015,15 @@ function compruebaYear(yearBib, dato){
     else{ //Sólo hay un año/franja
       if(dato.indexOf("-") > -1){ //Franja única
         var rango = dato.split("-");
+        rango[0] = rango[0].trim();
+        rango[1] = rango[1].trim();
         if(yearBib >= rango[0] && yearBib <= rango[1]){
             return true;
         }
         return false;
       }
       else{ //Año único
+        dato = dato.trim();
         if(dato == yearBib){
           return true;
         }
@@ -1129,9 +1164,11 @@ function compruebaAutor(autores, dato){
         }
       }
       else{ //Sólo hay un autor
-        if(autores[0]['first'].indexOf(dato) > -1 || autores[0]['last'].indexOf(dato) > -1){
-          return true;
-        }
+       for(i=0; i<autores.length; i++){ 
+          if(autores[0]['first'].indexOf(dato) > -1 || autores[0]['last'].indexOf(dato) > -1){
+            return true;
+          }
+       }
       }
     }
     return bool;
@@ -1297,7 +1334,7 @@ function sustitute(arrayCites, arrayCitesId, body2, bibtex_dict, doc, estilo){ /
   return exito;
 }
 
-function report(arrayCitesId, bibtex_dict, doc, estilo, body2){
+function report(allIdCitas, bibtex_dict, doc, estilo, body2){
   /* lista para el reporte */
    var listaTuplasReporte = []; //Información de todas las citas que hayan pasado los filtros
    //var aux;
@@ -1313,8 +1350,8 @@ function report(arrayCitesId, bibtex_dict, doc, estilo, body2){
      }
    }*/
    var exito = true;
-   for(i=0; i<arrayCitesId.length; i++){
-     var ClaveUnitaria = arrayCitesId[i];
+   for(i=0; i<allIdCitas.length; i++){
+     var ClaveUnitaria = allIdCitas[i];
      listaTuplasReporte[i] = {};
      listaTuplasReporte[i].cite = ClaveUnitaria;
      listaTuplasReporte[i].info = bibtex_dict[ClaveUnitaria];
@@ -1468,6 +1505,28 @@ function setReport(body, listaTuplasReporte, estilo/*, arrayCitesId*/){
     
     index++;
     miReport.setHeading(DocumentApp.ParagraphHeading.HEADING1);
+    
+    /***
+    var miReport0 = body.insertParagraph(index, listaTuplasReporte[0].cite);
+    
+    index++;
+    miReport0.setHeading(DocumentApp.ParagraphHeading.HEADING1);
+    
+    var miReport1 = body.insertParagraph(index, listaTuplasReporte[1].cite);
+    
+    index++;
+    miReport1.setHeading(DocumentApp.ParagraphHeading.HEADING1);
+    
+    var miReport2 = body.insertParagraph(index, listaTuplasReporte[2].cite);
+    
+    index++;
+    miReport2.setHeading(DocumentApp.ParagraphHeading.HEADING1);
+    
+    var miReport3 = body.insertParagraph(index, listaTuplasReporte[3].cite);
+    
+    index++;
+    miReport3.setHeading(DocumentApp.ParagraphHeading.HEADING1);
+    ***/
     
     //elem.removeFromParent(); //Quitamos el \report
     var arrayCitesInserted = constructReporte(listaTuplasReporte, estilo, body, index); 
@@ -4991,4 +5050,3 @@ Como publicar un ADD-ON (complemento): https://developers.google.com/apps-script
 Campos obligatorios y opcionales según las diferentes entradas de BibTex: https://www.andy-roberts.net/res/writing/latex/bibentries.pdf
 
 */
-

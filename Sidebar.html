@@ -2,7 +2,9 @@
 <html>
   <head>
     <base target="_top">
+    <!--<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">-->
     <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+    <!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
     <!-- The CSS package above applies Google styling to buttons and other elements. -->
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.js"></script>
@@ -113,6 +115,64 @@
       position: relative;
       top: 300px;
       text-align:center;
+    }
+    
+    input[type="equis"] {
+      -webkit-appearance: none;
+      background: #fff;
+      border: 1px solid #c6c6c6;
+      border-image: -ms-linear-gradient(top, #fff, #fff);
+      -webkit-border-radius: 50%;
+      border-radius: 50%;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      height: 15px;
+      outline: 0;
+      top: 2px;
+      width: 15px;
+    }
+
+    input[type="equis"]:hover {
+      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .1);
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, .1);
+    }
+    
+    input[type="equis"]:active {
+      background: #ebebeb;
+      border: 1px solid #c6c6c6;
+    }
+    
+    input[type="equis"]:focus {
+      border: 1px solid #4d90fe;
+    }
+    
+    input[type="equis"]:checked {
+      background: #fff;
+    }
+    
+    input[type="equis"]:checked:after {
+      background: #606060;
+      -webkit-border-radius: 50%;
+      border-radius: 50%;
+      content: '';
+      display: block;
+      height: 7px;
+      left: 3px;
+      position: relative;
+      top: 3px;
+      width: 7px;
+    }
+    
+    input[type="equis"]:disabled {
+      background-color: #fff;
+      border: 1px solid #e1e1e1;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      opacity: .5;
+    }
+    
+    input:disabled + label {
+      color: #afafaf;
     }
     
 /*}*/
@@ -272,12 +332,25 @@
       
       function selectFile(select){
         var $ul = $(select).prev('ul');
-         
-        if ($ul.find('input[value=' + $(select).val() + ']').length == 0)
-          $ul.append('<li onclick="$(this).remove();">' +
-            '<input type="hidden" name="select_file[]" value="' + 
-            $(select).val() + '" /> ' +
-            $(select).val() + '</li>');
+        //var disp = $('#select_file option:selected').text();
+        var disp = document.getElementById('select_file');
+        var text = disp.options[disp.selectedIndex].text;//FUNCIONA
+        //var text = getSelectedText('select_file');
+        //var file = DriveApp.getFileById(disp);
+        //var name = file.getName();
+        //alert(disp);
+        //alert(text);
+        //alert(name);
+        if(text.indexOf("Folder") > -1|| text.indexOf("../") > -1){return;}
+        else{
+        
+        
+          if ($ul.find('input[value=' + $(select).val() + ']').length == 0)
+            $ul.append('<li onclick="$(this).remove();">' +
+              '<input type="hidden" name="select_file[]" value="' + 
+              $(select).val() + '" /> ' +
+              /*$(select).val()*/text + '<input type="equis">'/*'<button class="quitar" onclick="$(this).remove();">X</button>'*/ +'</li>');
+        }
       }
       
       /**
@@ -665,7 +738,11 @@
         
         //alert(escape(filtro));
         
-    
+        /*google.script.run
+        .withSuccessHandler(nameDoc)
+        .withUserObject(this)
+        .nombreDocumento();*/
+        
         
         
         google.script.run
@@ -673,7 +750,11 @@
           //google.script.run.withSuccessHandler(function getBibtexAndDoc(id2, style));
           function(exitoBibtex, element) {
             if(exitoBibtex){
-              var msg = "Comprueba el nuevo documento que se ha creado en tu Drive con nombre: New Document";
+              //var doc = document.title();
+              //var nombre = doc.getName();
+              //alert(doc);
+              var test = "si";
+              var msg = "Comprueba el nuevo documento que se ha creado en tu Drive con nombre: 'Nombre actual'-Report";
               showSuccess(msg, $('#button-bar'));
             }else{
               var msg = "Hubo algun error durante el proceso. Es posible que en tu .bib falte algún campo obligatorio en alguna entrada o no hayas añadido el \bibliography para insertar la sección References.";
@@ -694,6 +775,9 @@
         
       } 
       
+      function nombreDocumento(name){
+        alert(name);
+      }
       
       /***********************************/
         

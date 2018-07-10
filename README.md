@@ -126,3 +126,40 @@ METAS PRÓXIMAS
 -[Estilizar el formulario para añadir entradas]
 
 -[Posibilidad de incluir un botón para comprobar ,previamente a intentar añadir, si existe el ID introducido.]
+
+=============================================
+# VERSION 3 [En progreso]
+
+METAS ALCANZADAS
+
+=============================================
+
+METAS PRÓXIMAS
+
+-Corregir error en el filtro de los autores.
+
+-Cambiar nombre (Combinación de documentos).
+
+-No mostrar en los ficheros seleccionados IDs, mejor nombres.
+
+-No mostrar el nombre de las carpetas al seleccionarlas en el desplegable(Se meten en el array de ficheros).
+
+-Añadir un icono "X" al lado de los nombres para eliminar de manera más intuitiva.
+
+-Permitir espacios en los rangos de años de los filtros.
+
+-Permitir en los filtros de autores añadir and y or (minúsculas).
+
+-Al generar el reporte, cambiar el nombre por: 'Documento original' + 'Report' o algo así.
+
+-Mostrar ayuda al lado de los filtros.
+
+-[Al insertar una entrada, al salir del campo ID cmorpobar automaticamente si está en el fichero .bib (¿onFocus?)].
+
+-[Dividir los mensajes de error de IDs duplicados y de campos obligatorios vacíos].
+
+-Valores que pueden ser largos (title, author, journal) en líneas diferentes.
+
+-[Estilizar el formulario para añadir entradas]
+
+-[Posibilidad de incluir un botón para comprobar ,previamente a intentar añadir, si existe el ID introducido.]

@@ -1,10 +1,15 @@
 /*
-       20180710(14:30)-Si el primer archivo elegido tiene 2 o más documentos de un autor, entonces se muestran bien con filtro para ese autor.
+       20180711(14:17)-Si el primer archivo elegido tiene 2 o más documentos de un autor, entonces se muestran bien con filtro para ese autor.
        OJO con el AND, algo raro pasa con ese filtro y no me gusta nada.
        -Ya se muestran los nombres de los archivos y no se muestran las carpetas.
        -Añadido un radio para eliminar los elementos más fácilmente
        -Cambia el nombre por 'Nombre actual'-Report
        -Utiliza trim() para los años/rango de años
+       -Añadidos comentarios de ayuda en los filtros
+       -Mensajes distintos para ID repetido y para campos obligatorios vacíos.
+       <DESHABILITADO EL FILTRO DE AUTORES DE MOMENTO PORQUE FALLA>
+       -Campos grandes para entradas que pueden ser largas
+       -Cambiado nombre de Información -> Añadir entrada
        
 */ 
 
@@ -100,7 +105,7 @@ function showInfo() {
   .setHeight(425)
   //.setSandboxMode(HtmlService.SandboxMode.IFRAME);
   //html.append("NADA");
-  DocumentApp.getUi().showModalDialog(html, 'Información');
+  DocumentApp.getUi().showModalDialog(html, 'Añadir entrada');
   
   //var template = HtmlService.createTemplateFromFile('Info').evaluate();
   //return template;
@@ -197,6 +202,7 @@ function pruebaEscritura(idDoc, campos, option){
    
    //var existe = false;
    var error = false;
+   var numberError = 99; //Error para ID repetido
    
    var objetivo = new BibTex();
    var objetivoComp = new BibTex();
@@ -211,7 +217,8 @@ function pruebaEscritura(idDoc, campos, option){
    }
    
    if(existe == true){
-     exito = false;
+     //exito = false;
+     return numberError;
    }
    else{
      var fallo = false;
@@ -798,15 +805,15 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
       
       //var aux2 = objetosBib[i].length;
       //var total = aux + aux2;
-      var autores = [];
+      
       for(x=0; x<Objeto.data.length; x++){ //Para cada entrada del Objeto
         
-        
-        autores[x] = Objeto.data[x].author;
+        var autores = [];
+        autores = Objeto.data[x].author;
         //aux++;
         
-        if(compruebaYear(Objeto.data[x].year, filtros[1]) && compruebaTipo(Objeto.data[x].entryType, filtros[0]) && compruebaAutor(autores[x], filtros[2])
-         && compruebaSeries(Objeto.data[x].series, filtros[3]) && compruebaEditorial(Objeto.data[x].publisher, filtros[4])){
+        if(compruebaYear(Objeto.data[x].year, filtros[1]) && compruebaTipo(Objeto.data[x].entryType, filtros[0]) /*&&
+        compruebaAutor(autores, filtros[2])*/ && compruebaSeries(Objeto.data[x].series, filtros[3]) && compruebaEditorial(Objeto.data[x].publisher, filtros[4])){
           var outobj = Objeto.google(x);
           bibtex_dict[Objeto.data[x].cite] = outobj;
           allIdCitas[index] = Objeto.data[x].cite;
@@ -923,12 +930,13 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
   return exito;
  }
 
-function compruebaSeries(serieBib, dato){ //Aquellos que no tengan series, también se muestran por ser un campo poco común
-  if(dato && serieBib){
+function compruebaSeries(serieBib, dato){ //Aquellos que no tengan series, no se muestran
+  if(dato /*&& serieBib*/){
     //serieBib = checkTildes(serieBib);
     if(dato.indexOf(",") > -1){
       var series = dato.split(",");
       for(i=0; i<series.length; i++){
+        series[i] = series[i].trim();
         if(serieBib == series[i]){
           return true;
         }
@@ -936,6 +944,7 @@ function compruebaSeries(serieBib, dato){ //Aquellos que no tengan series, tambi
       return false;
     }
     else{
+      dato = dato.trim();
       if(serieBib == dato){
         return true;
       }
@@ -945,11 +954,12 @@ function compruebaSeries(serieBib, dato){ //Aquellos que no tengan series, tambi
   return true;
 }
 
-function compruebaEditorial(editorialBib, dato){ //Aquellos que no tengan editorial, también se muestran por ser un campo poco común
-  if(dato && editorialBib){
+function compruebaEditorial(editorialBib, dato){ //Aquellos que no tengan editorial, no se muestran
+  if(dato /*&& editorialBib*/){
     if(dato.indexOf(",") > -1){
       var editoriales = dato.split(",");
       for(i=0; i<editoriales.length; i++){
+        editoriales[i] = editoriales[i].trim();
         if(editorialBib == editoriales[i]){
           return true;
         }
@@ -957,6 +967,7 @@ function compruebaEditorial(editorialBib, dato){ //Aquellos que no tengan editor
       return false;
     }
     else{
+      dato = dato.trim();
       if(editorialBib == dato){
         return true;
       }
@@ -971,6 +982,7 @@ function compruebaTipo(tipoBib, dato){
     if(dato.indexOf(",") > -1){ //Varios tipos
       var tipos = dato.split(",");
       for(i=0; i<tipos.length; i++){
+        tipos[i] = tipos[i].trim();
         if(tipoBib == tipos[i]){
           return true;
         }
@@ -978,6 +990,7 @@ function compruebaTipo(tipoBib, dato){
       return false;
     }
     else{ //Sólo un tipo
+      dato = dato.trim();
       if(tipoBib == dato){
         return true;
       }
@@ -1057,10 +1070,76 @@ function compruebaYear(yearBib, dato){
   }*/
 }
 
+function compruebaAutor2(autores, dato){
+  if(dato && autores){
+    dato = dato.replace('%20', ' ');
+    if(autores.length > 1){ //varios autores en la entrada
+      /**/return false;
+    }
+    else{ //Sólo tiene un autor
+      if(dato.indexOf(" AND ") > -1 || dato.indexOf(" and ") > -1){ //varios datos a buscar
+        //var subFiltro = [];
+        
+        var subFiltro = dato.split(" AND ");
+        for(i=0; i<subFiltro.length; i++){
+          subFiltro[i] = subFiltro[i].trim(); //Quitamos espacios
+          if(autores[0]['first'].indexOf(subFiltro[i]) > -1 || autores[0]['last'].indexOf(subFiltro[i]) > -1){
+            //no hacemos nada, seguimos buscando
+          }
+          else{
+            return false;
+          }
+        }
+        //hemos buscado y hemos encontrado todo
+        return true;
+      }//and
+      else if(dato.indexOf(" OR ") > -1 || dato.indexOf(" or ") > -1){ //varios datos pero con encontrar uno vale
+        //var subFiltro = [];
+        /*if(dato.indexOf("%20") > -1){
+          dato = dato.replace('%20', ' ');
+        }*/
+        //var dato2 = dato;
+        var subFiltro = dato.split(" OR ");
+        for(i=0; i<subFiltro.length; i++){
+          subFiltro[i] = subFiltro[i].trim();
+          
+          if(autores[0].first.indexOf(subFiltro[i]) > -1 || autores[0].last.indexOf(subFiltro[i]) > -1){
+            return true;
+          }
+          else{
+            //no hacemos nada, seguimos buscando
+          }
+          
+        }
+        //hemos buscado y no hay ni una coincidencia
+        return false;
+      }
+      else{ //único dato a buscar
+        var dato2 = dato;
+        dato2 = dato2.trim(); //quitamos espacios, por lo que NO se permite poner David Hervás, tendría que ser David AND Hervás
+        if(autores[0].first.indexOf(dato2) > -1 || autores[0].last.indexOf(dato2) > -1){
+          //coincide
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+    }
+    
+  }
+  return true;
+}
+
 function compruebaAutor(autores, dato){
   if(dato && autores){
-    if(dato.indexOf(" AND ") > -1){ //Varios datos en el filtro y que estén en el mismo documento "AND"
-      var subFiltro = dato.split(" AND ");
+    if(dato.indexOf(" AND ") > -1 || dato.indexOf(" and ") > -1){ //Varios datos en el filtro y que estén en el mismo documento "AND"
+      if(dato.indexOf(" AND ") > -1){
+        var subFiltro = dato.split(" AND ");
+      }
+      else if(dato.indexOf(" and ") > -1){
+        var subFiltro = dato.split(" and ");
+      }
       var bool = true;
       
       if(autores.length > 1){ //varios autores en el documento
@@ -1105,8 +1184,13 @@ function compruebaAutor(autores, dato){
       return bool;
       
     }// indexOf(" AND ")
-    else if(dato.indexOf(" OR ") > -1){ //Varios datos en el filtro pero que uno esté y el resto no importa "OR"
-      var subFiltro = dato.split(" OR ");
+    else if(dato.indexOf(" OR ") > -1 || dato.indexOf(" or ") > -1){ //Varios datos en el filtro pero que uno esté y el resto no importa "OR"
+      if(dato.indexOf(" OR ") > -1){
+        var subFiltro = dato.split(" OR ");
+      }
+      else if(dato.indexOf(" or ") > -1){
+        var subFiltro = dato.split(" or ");
+      }
       var bool = false;
       
        if(autores.length > 1){ //varios autores en el documento
@@ -1149,9 +1233,12 @@ function compruebaAutor(autores, dato){
       
     }//indexOf(" OR ")
     else{ //Sólo un dato a buscar
+      dato = dato.trim();
       if(autores.length > 1){ //Varios autores en el mismo documento
         var encontrado = false;
         for(i=0; i<autores.length; i++){
+          autores[i]['first'] = autores[i]['first'].trim();
+          autores[i]['last'] = autores[i]['last'].trim();
           if(autores[i]['first'].indexOf(dato) > -1 || autores[i]['last'].indexOf(dato) > -1){
             if(encontrado == false){encontrado = true;}
           }
@@ -1164,14 +1251,22 @@ function compruebaAutor(autores, dato){
         }
       }
       else{ //Sólo hay un autor
-       for(i=0; i<autores.length; i++){ 
-          if(autores[0]['first'].indexOf(dato) > -1 || autores[0]['last'].indexOf(dato) > -1){
+       for(w=0; w<autores.length; w++){ 
+          autores[w]['first'] = autores[w]['first'].trim();
+          autores[w]['last'] = autores[w]['last'].trim();
+          if(autores[w]['first'].indexOf(dato) > -1 || autores[w]['last'].indexOf(dato) > -1){
             return true;
           }
+          //var bool = false;
        }
       }
-    }
-    return bool;
+      //return bool;
+    }//
+    /*
+    Por si no cumple ninguna condición (ni and, ni or, ni único en el filtro), pese a existir el filtro y los autores devolvemos false
+    */
+    //return bool;
+    return false;
   }
   return true;
 }

@@ -158,7 +158,27 @@
     .tableStyle {
       display: -webkit-inline-box;
     }
-    
+    input[type="textBig"],
+    textarea{
+      background: #fff;
+      border: 1px solid #d9d9d9;
+      -moz-border-radius: 1px;
+      -webkit-border-radius: 1px;
+      border-radius: 1px;
+      border-top: 1px solid #c0c0c0;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      color: #000;
+      font-family: arial, sans-serif;
+      font-size: 13px;
+      font-weight: normal;
+      margin: 0;
+      outline: 0;
+      padding: 4px;
+      display: inherit;
+      width: 100%;
+    }
     /*}*/
     /************************************/
     /*}*/
@@ -202,8 +222,8 @@
         <div id="option2" class="group">
           <input type="hidden" id="tipoEntrada" value="@book">
           <input type="text" placeholder="*ID" name="campos[]">
-          <input type="text" placeholder="*Author" name="campos[]">
-          <input type="text" placeholder="*Title" name="campos[]">
+          <input type="textBig" placeholder="*Author" name="campos[]">
+          <input type="textBig" placeholder="*Title" name="campos[]">
           <input type="text" placeholder="*Publisher" name="campos[]">
           <input type="text" placeholder="*Year" name="campos[]">
           <input type="text" placeholder="volume" name="campos[]">
@@ -216,9 +236,9 @@
         <div id="option3" class="group">
           <input type="hidden" id="tipoEntrada" value="@article">
           <input type="text" placeholder="*ID" name="camposA[]">
-          <input type="text" placeholder="*Author" name="camposA[]">
-          <input type="text" placeholder="*Title" name="camposA[]">
-          <input type="text" placeholder="*Journal" name="camposA[]">
+          <input type="textBig" placeholder="*Author" name="camposA[]">
+          <input type="textBig" placeholder="*Title" name="camposA[]">
+          <input type="textBig" placeholder="*Journal" name="camposA[]">
           <input type="text" placeholder="*Year" name="camposA[]">
           <input type="text" placeholder="volume" name="camposA[]">
           <input type="text" placeholder="number" name="camposA[]">
@@ -229,8 +249,8 @@
         <div id="option4" class="group">
           <input type="hidden" id="tipoEntrada" value="@techreport">
           <input type="text" placeholder="*ID" name="camposT[]">
-          <input type="text" placeholder="*Author" name="camposT[]">
-          <input type="text" placeholder="*Title" name="camposT[]">
+          <input type="textBig" placeholder="*Author" name="camposT[]">
+          <input type="textBig" placeholder="*Title" name="camposT[]">
           <input type="text" placeholder="*Institution" name="camposT[]">
           <input type="text" placeholder="*Year" name="camposT[]">
           <input type="text" placeholder="type" name="camposT[]">
@@ -241,8 +261,8 @@
         <div id="option5" class="group">
           <input type="hidden" id="tipoEntrada" value="@misc">
           <input type="text" placeholder="*ID" name="camposM[]">
-          <input type="text" placeholder="Author" name="camposM[]">
-          <input type="text" placeholder="Title" name="camposM[]">
+          <input type="textBig" placeholder="Author" name="camposM[]">
+          <input type="textBig" placeholder="Title" name="camposM[]">
           <input type="text" placeholder="Howpublished" name="camposM[]">
           <input type="text" placeholder="Month" name="camposM[]">
           <input type="text" placeholder="Year" name="camposM[]">
@@ -251,8 +271,8 @@
         <div id="option6" class="group">
           <input type="hidden" id="tipoEntrada" value="@booklet">
           <input type="text" placeholder="*ID" name="camposBL[]">
-          <input type="text" placeholder="*title" name="camposBL[]">
-          <input type="text" placeholder="author" name="camposBL[]">
+          <input type="textBig" placeholder="*title" name="camposBL[]">
+          <input type="textBig" placeholder="author" name="camposBL[]">
           <input type="text" placeholder="howpublished" name="camposBL[]">
           <input type="text" placeholder="address" name="camposBL[]">
           <input type="text" placeholder="month" name="camposBL[]">
@@ -262,9 +282,9 @@
         <div id="option7" class="group">
           <input type="hidden" id="tipoEntrada" value="@conference">
           <input type="text" placeholder="*ID" name="camposC[]">
-          <input type="text" placeholder="*author" name="camposC[]">
-          <input type="text" placeholder="*title" name="camposC[]">
-          <input type="text" placeholder="*booktitle" name="camposC[]">
+          <input type="textBig" placeholder="*author" name="camposC[]">
+          <input type="textBig" placeholder="*title" name="camposC[]">
+          <input type="textBig" placeholder="*booktitle" name="camposC[]">
           <input type="text" placeholder="*year" name="camposC[]">
           <input type="text" placeholder="editor" name="camposC[]">
           <input type="text" placeholder="volume" name="camposC[]">
@@ -279,8 +299,8 @@
         <div id="option8" class="group">
           <input type="hidden" id="tipoEntrada" value="@inbook">
           <input type="text" placeholder="*ID" name="camposIB[]">
-          <input type="text" placeholder="*Author" name="camposIB[]">
-          <input type="text" placeholder="*Title" name="camposIB[]">
+          <input type="textBig" placeholder="*Author" name="camposIB[]">
+          <input type="textBig" placeholder="*Title" name="camposIB[]">
           <input type="text" placeholder="*Chapter" name="camposIB[]">
           <input type="text" placeholder="*Publisher" name="camposIB[]">
           <input type="text" placeholder="*Year" name="camposIB[]">
@@ -295,8 +315,8 @@
         <div id="option9" class="group">
           <input type="hidden" id="tipoEntrada" value="@incollection">
           <input type="text" placeholder="*ID" name="camposIC[]">
-          <input type="text" placeholder="*author" name="camposIC[]">
-          <input type="text" placeholder="*title" name="camposIC[]">
+          <input type="textBig" placeholder="*author" name="camposIC[]">
+          <input type="textBig" placeholder="*title" name="camposIC[]">
           <input type="text" placeholder="*booktitle" name="camposIC[]">
           <input type="text" placeholder="*publisher" name="camposIC[]">
           <input type="text" placeholder="*year" name="camposIC[]">
@@ -314,9 +334,9 @@
         <div id="option10" class="group">
           <input type="hidden" id="tipoEntrada" value="@inproceedings">
           <input type="text" placeholder="*ID" name="camposIP[]">
-          <input type="text" placeholder="*author" name="camposIP[]">
-          <input type="text" placeholder="*title" name="camposIP[]">
-          <input type="text" placeholder="*booktitle" name="camposIP[]">
+          <input type="textBig" placeholder="*author" name="camposIP[]">
+          <input type="textBig" placeholder="*title" name="camposIP[]">
+          <input type="textBig" placeholder="*booktitle" name="camposIP[]">
           <input type="text" placeholder="*year" name="camposIP[]">
           <input type="text" placeholder="editor" name="camposIP[]">
           <input type="text" placeholder="volume" name="camposIP[]">
@@ -331,8 +351,8 @@
         <div id="option12" class="group">
           <input type="hidden" id="tipoEntrada" value="@mastersthesis">
           <input type="text" placeholder="*ID" name="camposMS[]">
-          <input type="text" placeholder="*author" name="camposMS[]">
-          <input type="text" placeholder="*title" name="camposMS[]">
+          <input type="textBig" placeholder="*author" name="camposMS[]">
+          <input type="textBig" placeholder="*title" name="camposMS[]">
           <input type="text" placeholder="*school" name="camposMS[]">
           <input type="text" placeholder="*year" name="camposMS[]">
           <input type="text" placeholder="type" name="camposMS[]">
@@ -343,8 +363,8 @@
         <div id="option13" class="group">
           <input type="hidden" id="tipoEntrada" value="@phdthesis">
           <input type="text" placeholder="*ID" name="camposPT[]">
-          <input type="text" placeholder="*author" name="camposPT[]">
-          <input type="text" placeholder="*title" name="camposPT[]">
+          <input type="textBig" placeholder="*author" name="camposPT[]">
+          <input type="textBig" placeholder="*title" name="camposPT[]">
           <input type="text" placeholder="*school" name="camposPT[]">
           <input type="text" placeholder="*year" name="camposPT[]">
           <input type="text" placeholder="type" name="camposPT[]">
@@ -355,7 +375,7 @@
         <div id="option14" class="group">
           <input type="hidden" id="tipoEntrada" value="@proceedings">
           <input type="text" placeholder="*ID" name="camposPR[]">
-          <input type="text" placeholder="*title" name="camposPR[]">
+          <input type="textBig" placeholder="*title" name="camposPR[]">
           <input type="text" placeholder="*year" name="camposPR[]">
           <input type="text" placeholder="editor" name="camposPR[]">
           <input type="text" placeholder="volume" name="camposPR[]">
@@ -623,11 +643,14 @@
         google.script.run
         .withSuccessHandler(
           function(exito, element){//probe
-            if(exito){
+            if(exito == 99){
+              var msg = "Ya existe una entrada con ese ID. No se ha modificado el fichero";
+              showErrorE(msg, $('#infoBlock'));
+            }else if(exito){
               var msg = "Comprueba el documento seleccionado en tu Drive";
               showSuccessE(msg, $('#infoBlock'));
             }else{
-              var msg = "Ya existe una entrada con ese ID o falta algún campo obligatorio. No se ha modificado el fichero";
+              var msg = "Falta algún campo obligatorio. No se ha modificado el fichero";
               showErrorE(msg, $('#infoBlock'));
             }
             element.disabled = false;

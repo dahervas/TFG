@@ -285,7 +285,7 @@
       <div class="block" id="button-bar">
         <!--<button class="blue" id="info">Información</button>-->
         <input type="reset" id="reset" value="Resetear formulario">
-        <input type="reset" id="info" value="Informacion" onclick="showAlert()">
+        <input type="reset" id="info" value="Añadir entrada" onclick="showAlert()">
       </div>
         
         <div class="block form-group">
@@ -787,6 +787,8 @@
         alert(escape(filtros[1]));
         alert(escape(filtros[2]));*/
         
+        //alert(docsBib[0]);
+        
         
         /*Para el filtro, varios input text, cada uno con un id (tipo de objeto, año, titulo... )*/
         
@@ -808,7 +810,7 @@
               //var nombre = doc.getName();
               //alert(doc);
               var test = "si";
-              var msg = "Comprueba el nuevo documento que se ha creado en tu Drive con nombre: 'Nombre actual'-Report";
+              var msg = "Comprueba el nuevo documento que se ha creado en tu Drive con nombre: [Nombre actual]-Report";
               showSuccess(msg, $('#button-bar'));
             }else{
               var msg = "Hubo algun error durante el proceso. Es posible que en tu .bib falte algún campo obligatorio en alguna entrada o no hayas añadido el \bibliography para insertar la sección References.";

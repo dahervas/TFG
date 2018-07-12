@@ -813,7 +813,7 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
         //aux++;
         
         if(compruebaYear(Objeto.data[x].year, filtros[1]) && compruebaTipo(Objeto.data[x].entryType, filtros[0]) /*&&
-        compruebaAutor(autores, filtros[2])*/ && compruebaSeries(Objeto.data[x].series, filtros[3]) && compruebaEditorial(Objeto.data[x].publisher, filtros[4])){
+        compruebaAutor2(autores, filtros[2])*/ && compruebaSeries(Objeto.data[x].series, filtros[3]) && compruebaEditorial(Objeto.data[x].publisher, filtros[4])){
           var outobj = Objeto.google(x);
           bibtex_dict[Objeto.data[x].cite] = outobj;
           allIdCitas[index] = Objeto.data[x].cite;

@@ -132,17 +132,11 @@ METAS PRÓXIMAS
 
 METAS ALCANZADAS
 
-=============================================
-
-METAS PRÓXIMAS
-
--Corregir error en el filtro de los autores.
-
 -Cambiar nombre (Combinación de documentos).
 
 -No mostrar en los ficheros seleccionados IDs, mejor nombres.
 
--No mostrar el nombre de las carpetas al seleccionarlas en el desplegable(Se meten en el array de ficheros).
+-No mostrar el nombre de las carpetas al seleccionarlas en el desplegable(No se meten en el array de ficheros).
 
 -Añadir un icono "X" al lado de los nombres para eliminar de manera más intuitiva.
 
@@ -154,12 +148,14 @@ METAS PRÓXIMAS
 
 -Mostrar ayuda al lado de los filtros.
 
--[Al insertar una entrada, al salir del campo ID cmorpobar automaticamente si está en el fichero .bib (¿onFocus?)].
-
 -[Dividir los mensajes de error de IDs duplicados y de campos obligatorios vacíos].
 
 -Valores que pueden ser largos (title, author, journal) en líneas diferentes.
 
--[Estilizar el formulario para añadir entradas]
+=============================================
 
--[Posibilidad de incluir un botón para comprobar ,previamente a intentar añadir, si existe el ID introducido.]
+METAS PRÓXIMAS
+
+-Corregir error en el filtro de los autores.
+
+-[Al insertar una entrada, al salir del campo ID comprobar automaticamente si está en el fichero .bib (¿onFocus?)].

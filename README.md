@@ -152,10 +152,10 @@ METAS ALCANZADAS
 
 -Valores que pueden ser largos (title, author, journal) en líneas diferentes.
 
+-Corregir error en el filtro de los autores.
+
 =============================================
 
 METAS PRÓXIMAS
-
--Corregir error en el filtro de los autores.
 
 -[Al insertar una entrada, al salir del campo ID comprobar automaticamente si está en el fichero .bib (¿onFocus?)].

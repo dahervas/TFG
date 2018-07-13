@@ -4,8 +4,11 @@
     <base target="_top">
     <!--<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">-->
     <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
     <!-- The CSS package above applies Google styling to buttons and other elements. -->
+    
+    
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.js"></script>
     
@@ -118,14 +121,15 @@
     }
     
     input[type="equis"] {
-      -webkit-appearance: none;
+      -webkit-appearance: searchfield-cancel-button;
+      position: inherit;
       background: #fff;
       border: 1px solid #c6c6c6;
       border-image: -ms-linear-gradient(top, #fff, #fff);
       -webkit-border-radius: 50%;
       border-radius: 50%;
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box;
+      /*-webkit-box-sizing: border-box;
+      box-sizing: border-box;*/
       height: 15px;
       outline: 0;
       top: 2px;
@@ -155,6 +159,7 @@
       -webkit-border-radius: 50%;
       border-radius: 50%;
       content: '';
+      /*content: "\00d7";*/
       display: block;
       height: 7px;
       left: 3px;
@@ -178,7 +183,7 @@
     .tooltip {
         position: relative;
         display: inline-block;
-        border-bottom: 1px dotted black;
+        /*border-bottom: 1px dotted black;*/
     }
     
     .tooltip .tooltiptext {
@@ -213,6 +218,11 @@
         visibility: visible;
         opacity: 1;
     }
+    
+    /*glyphicon-question-sign:before{content:"\e085"}*/
+    
+    
+    
     
 /*}*/
     /************************************/
@@ -293,23 +303,23 @@
           <br>
           <form>
             <input type="text" placeholder="Tipo" id="filtroTipo">
-            <div class="tooltip">Ayuda
+            <div class="tooltip"><i class="fa fa-info-circle" style="font-size:20px; vertical-align: bottom;"></i>
               <span class="tooltiptext">article, book, techreport, misc ...</span>
             </div>
             <input type="text" placeholder="Año" id="filtroYear">
-            <div class="tooltip">Ayuda
+            <div class="tooltip">   <i class="fa fa-info-circle" style="font-size:20px; vertical-align: bottom;"></i>
               <span class="tooltiptext">2000, 1990-1995 ...</span>
             </div>
             <input type="text" placeholder="Autor(es)" id="filtroAuthor">
-            <div class="tooltip">Ayuda
-              <span class="tooltiptext">David, Tip AND Frank, Boye OR David ...</span>
+            <div class="tooltip">   <i class="fa fa-info-circle" style="font-size:20px; vertical-align: bottom;"></i>
+              <span class="tooltiptext">David, Tip AND Frank, Boye OR David, David AND (Frank OR Tip), NOT David, NOT (David OR Frank) ...</span>
             </div>
             <input type="text" placeholder="Serie(s)" id="filtroSeries">
-            <div class="tooltip">Ayuda
+            <div class="tooltip"><i class="fa fa-info-circle" style="font-size:20px; vertical-align: bottom;"></i>
               <span class="tooltiptext">LNCS, OSDI'08 ...</span>
             </div>
             <input type="text" placeholder="Editorial(es)" id="filtroEditoriales">
-            <div class="tooltip">Ayuda
+            <div class="tooltip"><i class="fa fa-info-circle" style="font-size:20px; vertical-align: bottom;"></i>
               <span class="tooltiptext">John Wiley & Sons, Springer-Verlag ...</span>
             </div>
           </form>
@@ -333,7 +343,7 @@
 
     <div class="sidebar bottom">
       <img alt="Add-on logo" class="logo" src="https://www.gstatic.com/images/branding/product/1x/translate_48dp.png" width="27" height="27">
-      <span class="gray branding-text">BETA v3</span>
+      <span class="gray branding-text">BETA v4</span>
     </div>
     
     <!--<div class="block">

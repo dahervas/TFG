@@ -1,21 +1,10 @@
 /*
-       20180712(14:00)-Si el primer archivo elegido tiene 2 o más documentos de un autor, entonces se muestran bien con filtro para ese autor.
-       OJO con el AND, algo raro pasa con ese filtro y no me gusta nada.
-       -Ya se muestran los nombres de los archivos y no se muestran las carpetas.
-       -Añadido un radio para eliminar los elementos más fácilmente
-       -Cambia el nombre por 'Nombre actual'-Report
-       -Utiliza trim() para los años/rango de años
-       -Añadidos comentarios de ayuda en los filtros
-       -Mensajes distintos para ID repetido y para campos obligatorios vacíos.
-       -Corregido error filtro autores!!!! La variable i se usaba en la funcion que llamaba
-       a compruebaAutores2 y en la misma función compruebaAutores2, cambio 1 
-       -Campos grandes para entradas que pueden ser largas
-       -Cambiado nombre de Información -> Añadir entrada
-       -Insertada la opción de poner un NOT (sólo eso, sin combinar con AND ni OR)
-       -Permite hacer un AND con un NOT (David AND NOT Carlos, NOT Carlos AND David)
-       -Permite hacer un OR con un NOT (David AND NOT Tip, NOT David OR Tip)
-       -BETA v3
-       
+       20180713(13:20)-Prueba de: a AND (b OR c)
+       -Implementado: a AND (b OR c); (a AND b) OR c; 
+                      a OR (b AND c); (a OR b) AND c
+       -Iconos de quitar y de información
+       -NOT (a AND b), NOT (a OR b)
+       -No he tocado más hoy
 */ 
 
 
@@ -818,13 +807,8 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
         autores = Objeto.data[x].author;
         //aux++;
         
-<<<<<<< HEAD
         if(compruebaYear(Objeto.data[x].year, filtros[1]) && compruebaTipo(Objeto.data[x].entryType, filtros[0]) &&
         compruebaAutor(autores, filtros[2]) && compruebaSeries(Objeto.data[x].series, filtros[3]) && compruebaEditorial(Objeto.data[x].publisher, filtros[4])){
-=======
-        if(compruebaYear(Objeto.data[x].year, filtros[1]) && compruebaTipo(Objeto.data[x].entryType, filtros[0]) /*&&
-        compruebaAutor2(autores, filtros[2])*/ && compruebaSeries(Objeto.data[x].series, filtros[3]) && compruebaEditorial(Objeto.data[x].publisher, filtros[4])){
->>>>>>> 6178a0cc1d38657f72094acd14cac7333bbf17f5
           var outobj = Objeto.google(x);
           bibtex_dict[Objeto.data[x].cite] = outobj;
           allIdCitas[index] = Objeto.data[x].cite;
@@ -1136,17 +1120,101 @@ function compruebaAutor2(autores, dato){
 function checkNot(autores, dato){
   //var encontrado = false;
   var target = dato.slice(4); //Quitamos los primero 4 caracteres (NOT )
-  
-  for(t=0; t<autores.length; t++){
-    if(autores[t]['first'].indexOf(target) > -1 || autores[t]['last'].indexOf(target) > -1){
-      return false;
-    }
+  /*if(target.indexOf(" AND ") > -1 || target.indexOf(" and ") > -1){ //NOT (a AND b)
+    var RegNot = 
   }
-  return true;
+  else if(target.indexOf(" OR ") > -1 || target.indexOf(" or ") > -1){ //NOT (a OR b)
+    
+  }
+  else{ *///NOT a
+    for(t=0; t<autores.length; t++){
+      if(autores[t]['first'].indexOf(target) > -1 || autores[t]['last'].indexOf(target) > -1){
+        return false;
+      }
+    }
+    return true;
+  //}
+  
 }
 
 function compruebaAutor(autores, dato){
   if(dato && autores){
+    /**/
+    if(dato.indexOf("(") > -1 && dato.indexOf(")") > -1){//Si existen paréntesis
+      var regExp = /\(([^(][^)]+)\)/; //Coger lo que haya entre los paréntesis
+      var matches = regExp.exec(dato);
+      
+      if(dato.indexOf("NOT ") > -1 || dato.indexOf("not ") > -1){ //NOT (a AND b)
+        if(compruebaAutor(autores, matches[1])){
+          return false;
+        }
+        else{
+          return true;
+        }
+      }
+      
+      if(matches[1].indexOf(" OR ") > -1 || matches[1].indexOf(" or ") > -1){ //(b OR c)
+        if(dato.indexOf(" AND ") > -1){
+          var test = dato.split(" AND "); //a;(b OR c)
+        }
+        else if(dato.indexOf(" and ") > -1){
+          var test = dato.split(" and "); //a;(b or c)
+        }
+        
+        if(test[0].indexOf(" OR ") > -1 || test[0].indexOf(" or ") > -1){//(b OR c);a
+           if(compruebaAutor(autores, test[1]) && compruebaAutor(autores, matches[1])){
+             return true;
+           }
+           else{
+             return false;
+           }
+        }
+        else{
+          if(compruebaAutor(autores, test[0]) && compruebaAutor(autores, matches[1])){
+             return true;
+           }
+           else{
+             return false;
+           }
+        }
+        
+        /*if(compruebaAutor(autores, test[0]) && compruebaAutor(autores, matches[1])){
+          return true;
+        }
+        else{
+          return false;
+        }*/
+      }
+      else if(matches[1].indexOf(" AND ") > -1 || matches[1].indexOf(" and ") > -1){ //(b and c)
+        if(dato.indexOf(" OR ") > -1){
+          var test = dato.split(" OR "); //a;(b AND c)
+        }
+        else if(dato.indexOf(" or ") > -1){
+          var test = dato.split(" or "); //a;(b and c)
+        }
+        
+        if(test[0].indexOf(" AND ") > -1 || test[0].indexOf(" and ") > -1){ //(a AND b);c
+          test[1] = test[1].trim();
+          if(compruebaAutor(autores, test[1]) || compruebaAutor(autores, matches[1])){
+            return true;
+          }
+          else{
+            return false;
+          }
+        }
+        else{ //c;(a AND b)
+        
+          if(compruebaAutor(autores, test[0]) || compruebaAutor(autores, matches[1])){
+            return true;
+          }
+          else{
+            return false;
+          }
+        }
+        
+      }
+    }
+    /**/
     
     if(dato.indexOf(" AND ") > -1 || dato.indexOf(" and ") > -1){ //Varios datos en el filtro y que estén en el mismo documento "AND"
       if(dato.indexOf(" AND ") > -1){
@@ -1160,6 +1228,12 @@ function compruebaAutor(autores, dato){
       if(autores.length > 1){ //varios autores en el documento
         for(s=0; s<subFiltro.length; s++){
           //subFiltro[s] = subFiltro[s].trim();
+          /*COMPRUEBO SI EXISTE UN OR ADICIONAL*/
+          //var regExp2 = /\(([^(][^)]+)\)/;
+          //var matches = regExp2.exec(valor)
+          
+          
+          /**/
           /*Compruebo si existe un NOT en el subFiltro*/
           if(subFiltro[s].indexOf("NOT ") > -1 || subFiltro[s].indexOf("not ") > -1){ //Sólo los que no tengan ese autor
             if(checkNot(autores, subFiltro[s])){

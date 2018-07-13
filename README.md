@@ -128,7 +128,7 @@ METAS PRÓXIMAS
 -[Posibilidad de incluir un botón para comprobar ,previamente a intentar añadir, si existe el ID introducido.]
 
 =============================================
-# VERSION 3 [En progreso]
+# VERSION 3
 
 METAS ALCANZADAS
 
@@ -159,3 +159,18 @@ METAS ALCANZADAS
 METAS PRÓXIMAS
 
 -[Al insertar una entrada, al salir del campo ID comprobar automaticamente si está en el fichero .bib (¿onFocus?)].
+
+=============================================
+# VERSION 4 [EN PROGRESO]
+
+METAS ALCANZADAS
+
+-Uso del operador NOT (filtroAutor).
+
+-Uso combinado del operador NOT con un AND y un OR (filtroAutor).
+
+=============================================
+
+METAS PRÓXIMAS
+
+-Soporte para uso simultáneo de los operadores AND y OR -> a AND (b OR c) ; a AND b OR c

@@ -161,7 +161,7 @@ METAS PRÓXIMAS
 -[Al insertar una entrada, al salir del campo ID comprobar automaticamente si está en el fichero .bib (¿onFocus?)].
 
 =============================================
-# VERSION 4 [EN PROGRESO]
+# VERSION 4
 
 METAS ALCANZADAS
 

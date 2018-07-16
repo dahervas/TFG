@@ -92,15 +92,15 @@ function showSidebar() {
 
 function showInfo() {
   //var doc = 1JdUbmEqmPZi1ZP5EpxoXlddx0Wxl5o8UoaxtL0XB-U9YAXECRiFkCzYb
-  var doc = DocumentApp.getActiveDocument();
-  var name = doc.getName();
+  //var doc = DocumentApp.getActiveDocument();
+  //var name = doc.getName();
 
 
   var html = HtmlService.createHtmlOutputFromFile('Info')
   .setWidth(600)
   .setHeight(425)
   //.setSandboxMode(HtmlService.SandboxMode.IFRAME);
-  html.append(name);
+  //html.append(name);
   
   DocumentApp.getUi().showModalDialog(html, 'Añadir entrada');
   

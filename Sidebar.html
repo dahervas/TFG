@@ -450,6 +450,18 @@
         /*google.script.run
         .withUserObject(this)
         .showInfo();*/
+        /*alert("HOLA");
+        
+        var doc = DocumentApp.getActiveDocument();
+        var name = doc.getName();
+        alert(name);*/
+        /*google.script.run
+        .withSuccessHandler(function showAlert2())
+        .withUserObject(this)
+        .nombreDocumento();*/
+        
+        
+        /************************************************/
         var docsBib1 = [];
         var files1 = document.getElementsByName("select_file[]"), i;
         for(i=0; i<files1.length; i++){
@@ -457,9 +469,16 @@
         }
         
         //if(docsBib1[0] == null){
+        
+        
+        
           google.script.run
           .withUserObject(this)
           .showInfo();
+          
+          
+          
+          
           //.pruebaEscritura();
         /*}else{
           google.script.run
@@ -482,9 +501,13 @@
         /*google.script.run
         .withUserObject(this)
         .showInfo();*/
-        google.script.run
+        
+        alert("SIIIIIIIIIU");
+        alert(aux);
+        
+        /*google.script.run
         .withUserObject(this)
-        .showInfo(aux);
+        .showInfo(aux);*/
         
         //DocumentApp.getUi().createMenu('Información').addItem('Show information', 'showInfo').addToUi();
         
@@ -576,17 +599,27 @@
       function importData(e) {
         var key = Object.keys(e)[0];
         if (!alldata[key]) alldata[key] = e[key];
-        if (e[key]["keyparent"]) {
-          $('#select_file').append($('<option>').html("./" + e[key]["keyname"]).val(key));
-          $('#select_file').append($('<option>').html("../").val(e[key]["keyparent"]));
+        
+        
+          //$('#select_file').append($('<option>').html("Cargando..."));
+          /*while($('#select_file option').size() < 1){
+            
+          }
+          $("#select_file option[value='loading']").remove();*/
           
-          //$('#select_file2').append($('<option>').html("./" + e[key]["keyname"]).val(key));
-          //$('#select_file2').append($('<option>').html("../").val(e[key]["keyparent"]));
-        } else {
-          //if(e[key]["files"].name.indexOf(".bib")){
-          $('#select_file').append($('<option>').html("./" + e[key]["keyname"]).val(key));//}
-          //$('#select_file2').append($('<option>').html("./" + e[key]["keyname"]).val(key));
-        }
+          if (e[key]["keyparent"]) {
+            
+            $('#select_file').append($('<option>').html("./" + e[key]["keyname"]).val(key));
+            $('#select_file').append($('<option>').html("../").val(e[key]["keyparent"]));
+            
+            //$('#select_file2').append($('<option>').html("./" + e[key]["keyname"]).val(key));
+            //$('#select_file2').append($('<option>').html("../").val(e[key]["keyparent"]));
+          } else {
+            //if(e[key]["files"].name.indexOf(".bib")){
+            $('#select_file').append($('<option>').html("./" + e[key]["keyname"]).val(key));//}
+            //$('#select_file2').append($('<option>').html("./" + e[key]["keyname"]).val(key));
+          }
+        
         for (var i=0; i < e[key]["files"].length; i++) {
           //var datos =getText(e[key]["files"][i].name);
           //if(datos.indexOf(".bib")){
@@ -819,17 +852,26 @@
         .withSuccessHandler(
           //google.script.run.withSuccessHandler(function getBibtexAndDoc(id2, style));
           function(exitoBibtex, element) {
-            if(exitoBibtex){
-              //var doc = document.title();
-              //var nombre = doc.getName();
-              //alert(doc);
+            /*if(exitoBibtex){
+              
               var test = "si";
+              
               var msg = "Comprueba el nuevo documento que se ha creado en tu Drive con nombre: [Nombre actual]-Report";
               showSuccess(msg, $('#button-bar'));
             }else{
               var msg = "Hubo algun error durante el proceso. Es posible que en tu .bib falte algún campo obligatorio en alguna entrada o no hayas añadido el \bibliography para insertar la sección References.";
               showError(msg, $('#button-bar'));
-            }            
+            }*/
+
+            if(exitoBibtex == false){
+              var msg = "Hubo algun error durante el proceso. Es posible que en tu .bib falte algún campo obligatorio en alguna entrada o no hayas añadido el \bibliography para insertar la sección References.";
+              showError(msg, $('#button-bar'));
+            }
+            else{
+              var test = "si";
+              var msg = "Comprueba el nuevo documento que se ha creado en tu Drive con nombre: "+exitoBibtex+"-Report";
+              showSuccess(msg, $('#button-bar'));
+            }
            
             element.disabled = false;  
             

@@ -1,10 +1,7 @@
 /*
-       20180713(13:20)-Prueba de: a AND (b OR c)
-       -Implementado: a AND (b OR c); (a AND b) OR c; 
-                      a OR (b AND c); (a OR b) AND c
-       -Iconos de quitar y de información
-       -NOT (a AND b), NOT (a OR b)
-       -No he tocado más hoy
+       20180716(16:29)-Fallos en ficheros .bib [parece que quitando los espacios gigantes en los autores funciona bien]
+       -Se muestra el nombre del archivo al hacer el reporte
+       -pruebas de poner un cargando en el desplegable
 */ 
 
 
@@ -94,11 +91,17 @@ function showSidebar() {
 
 
 function showInfo() {
+  //var doc = 1JdUbmEqmPZi1ZP5EpxoXlddx0Wxl5o8UoaxtL0XB-U9YAXECRiFkCzYb
+  var doc = DocumentApp.getActiveDocument();
+  var name = doc.getName();
+
+
   var html = HtmlService.createHtmlOutputFromFile('Info')
   .setWidth(600)
   .setHeight(425)
   //.setSandboxMode(HtmlService.SandboxMode.IFRAME);
-  //html.append("NADA");
+  html.append(name);
+  
   DocumentApp.getUi().showModalDialog(html, 'Añadir entrada');
   
   //var template = HtmlService.createTemplateFromFile('Info').evaluate();
@@ -728,9 +731,8 @@ function pruebaEscritura(idDoc, campos, option){
 }
 
 function nombreDocumento(){
-  var actual = DocumentApp.getActiveDocument().getId();
-  var docDrive = DriveApp.getFileById(actual);
-  var nombre = docDrive.getName();
+  var actual = DocumentApp.getActiveDocument();
+  var nombre = actual.getName();
   
   
   return nombre;
@@ -742,6 +744,12 @@ function nombreDocumento(){
 
 function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib es el array de ids de documentos (funciona)
   //init the return vars
+  /*var docsBib = [];
+  docsBib[0] = "1HcMc6ZVYzgdTCmV2mS8qr5pbZ3TUTpVr";
+  estilo = 'unsrt';
+  var filtros = [];
+  var option = '2';*/
+  
   
   //e = "1nvTRkIZ0dbHamwv_H9ovn_uPdveB6CRo"; //utilizado para el proceso de testing
   var bibtex_dict = []; //FIJA
@@ -920,6 +928,11 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
       var body = doc.getBody();
       var texto = body.getText();
       exito = report(/*arrayCitesId*/allIdCitas, bibtex_dict, doc, estilo, body);
+      if(exito){
+        var joker = DocumentApp.getActiveDocument();
+        var harley = joker.getName();
+        return harley;
+      }
     }
   
   return exito;

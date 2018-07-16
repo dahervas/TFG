@@ -169,8 +169,8 @@ METAS ALCANZADAS
 
 -Uso combinado del operador NOT con un AND y un OR (filtroAutor).
 
-=============================================
-
-METAS PRÓXIMAS
-
 -Soporte para uso simultáneo de los operadores AND y OR -> a AND (b OR c) ; a AND b OR c
+
+-Iconos añadidos.
+
+=============================================

@@ -174,3 +174,18 @@ METAS ALCANZADAS
 -Iconos añadidos.
 
 =============================================
+# VERSION 5 [EN PROCESO]
+
+METAS ALCANZADAS
+
+=============================================
+
+METAS PRÓXIMAS
+
+-Corrección de error al procesar ficheros .bib
+
+-Añadido mensaje "Cargando..." en el desplegable mientras se acceden a los datos del Drive.
+
+-Añadido el nombre del archivo en el mensaje al hacer el Reporte.
+
+-Mensajes de ayuda más extensos

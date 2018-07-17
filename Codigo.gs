@@ -1,7 +1,10 @@
 /*
-       20180716(16:29)-Fallos en ficheros .bib [parece que quitando los espacios gigantes en los autores funciona bien]
+       20180717(14:26)-Con un replace de los saltos de línea funciona correctamente modificado con la tabulación probada y con \s.
        -Se muestra el nombre del archivo al hacer el reporte
-       -pruebas de poner un cargando en el desplegable
+       -Funciona bien al poner Cargando... en el desplegable
+       -Se han modificado los comentarios para que sean más amplios.
+       -Añadidas las definiciones de objetos de tipo manual y unpublished (probar en testedWrite.bib si funcionan TODAS las entradas 14 tiposf)
+       pero había cogido bien el inbook de arte.bib, mirar el resto de entradas.
 */ 
 
 
@@ -745,7 +748,7 @@ function nombreDocumento(){
 function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib es el array de ids de documentos (funciona)
   //init the return vars
   /*var docsBib = [];
-  docsBib[0] = "1HcMc6ZVYzgdTCmV2mS8qr5pbZ3TUTpVr";
+  docsBib[0] = "1GqjFZVm6P0kBsvrSVyvNXZwIpOzatqEJ";
   estilo = 'unsrt';
   var filtros = [];
   var option = '2';*/
@@ -775,7 +778,13 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
   for(i=0; i<documentos.length; i++){
     objetosBib[i] = new BibTex();
     objetosBib[i].content = documentos[i].getBlob().getDataAsString();
-    objetosBib[i].parse();
+    
+    /*try{*/
+      objetosBib[i].parse();
+   /* }
+    catch(error){
+      throw new Error( "More meaningful error." );
+    }*/
     
     /*var libro = new BibTex();
     libro.content = documentos[i].getBlob().getDataAsString();
@@ -800,6 +809,9 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
     var aux = 0;
     var allIdCitas = [];
     var index = 0;
+    
+   
+    
     for(i=0; i<objetosBib.length; i++){
       //Para documento, lo añadimos al diccionario
       var Objeto = new BibTex();
@@ -810,19 +822,22 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
       //var total = aux + aux2;
       
       for(x=0; x<Objeto.data.length; x++){ //Para cada entrada del Objeto
-        
-        var autores = [];
-        autores = Objeto.data[x].author;
-        //aux++;
-        
-        if(compruebaYear(Objeto.data[x].year, filtros[1]) && compruebaTipo(Objeto.data[x].entryType, filtros[0]) &&
-        compruebaAutor(autores, filtros[2]) && compruebaSeries(Objeto.data[x].series, filtros[3]) && compruebaEditorial(Objeto.data[x].publisher, filtros[4])){
-          var outobj = Objeto.google(x);
-          bibtex_dict[Objeto.data[x].cite] = outobj;
-          allIdCitas[index] = Objeto.data[x].cite;
-          index++;
-        }
-        
+        /*if(Objeto.data[x].entryType == "manual"){}
+        else{*/
+          var autores = [];
+          autores = Objeto.data[x].author;
+          //aux++;
+          
+          if(compruebaYear(Objeto.data[x].year, filtros[1]) && compruebaTipo(Objeto.data[x].entryType, filtros[0]) &&
+          compruebaAutor(autores, filtros[2]) && compruebaSeries(Objeto.data[x].series, filtros[3]) && compruebaEditorial(Objeto.data[x].publisher, filtros[4])){
+            
+            var outobj = Objeto.google(x);
+            bibtex_dict[Objeto.data[x].cite] = outobj;
+            allIdCitas[index] = Objeto.data[x].cite;
+            
+            index++;
+          }
+        //}/**/
       }
       
     }
@@ -1620,6 +1635,7 @@ function report(allIdCitas, bibtex_dict, doc, estilo, body2){
    
    
    var exito = true;
+   
    for(i=0; i<allIdCitas.length; i++){
      var ClaveUnitaria = allIdCitas[i];
      listaTuplasReporte[i] = {};
@@ -2308,6 +2324,22 @@ function constructName(pos,tupla,estilo){
 
 function constructObj(info){
   switch(info.entryType){
+    case 'manual':
+      /*
+      Required fields: title.
+      Optional fields: author, organization, address, edition, month, year, note.
+      */
+      var obj = {authors: "", title: "", organization: "", address: "", edition: "", month: "", year: "", note: "", entryType: "manual"};
+         
+      break;
+    case 'unpublished':
+      /*
+      Required fields: author, title, note.
+      Optional fields: month, year.
+      */
+      var obj = {authors: "", title: "", note: "", month: "", year: "", entryType: "unpublished"};
+         
+      break;
     case 'booklet':
       /*
       Required fields: title.
@@ -2326,10 +2358,10 @@ function constructObj(info){
       break;
     case 'inbook':
       /*
-      Required fields: author, title, chapter, publisher, year.
+      Required fields: author or editor, title, chapter or pages, publisher, year.
       Optional fields: volume, series, type, address, edition, month, note.
       */
-      var obj = {authors: "", title: "", chapter: "", publisher: "", year: "", volume: "", series: "", type: "", address: "", edition: "", month: "", note: "", entryType: "inbook"};
+      var obj = {authors: ""/**/, editor: ""/**/, title: "", chapter: ""/**/, pages:""/**/, publisher: "", year: "", volume: "", series: "", type: "", address: "", edition: "", month: "", note: "", entryType: "inbook"};
          
       break;
     case 'book':
@@ -2553,6 +2585,14 @@ function finishInfo(obj){
       
       if(obj.type == ""){
         obj.type = "Booklet";
+      }
+      
+    break;
+    
+    case "manual":
+      
+      if(obj.type == ""){
+        obj.type = "Manual";
       }
       
     break;
@@ -4067,7 +4107,10 @@ BibTex.prototype = {
      * @return array the extracted authors
      */
       '_extractAuthors': function(entry) {   
-        entry       = this._unwrap(entry);  
+        entry       = this._unwrap(entry);
+        
+        entry = entry.replace(/\r?\n|\r|\t|\s/g, " ");
+        
         var authorarray = array();
         authorarray = split(' and ', entry);
         for (var i = 0; i < sizeof(authorarray); i++) {
@@ -4635,7 +4678,7 @@ BibTex.prototype = {
      var exito = true;  
      
      //Existe alguno de los dos??
-     if(entry['entryType'] == "book"){
+     if(entry['entryType'] == "book" /**/|| entry['entryType'] == "inbook"/**/){
        if (array_key_exists('editor', entry) || array_key_exists('author', entry)) {
          if (array_key_exists('author', entry)) { 
            ret.authors = entry['author'];                                                   //BOOK ---> EDITOR O AUTHOR
@@ -4647,7 +4690,7 @@ BibTex.prototype = {
        }else{
          exito = false;
        }       
-     }else if(entry['entryType'] != "proceedings" && entry['entryType'] != "booklet" ){
+     }else if(entry['entryType'] != "proceedings" && entry['entryType'] != "booklet" && entry['entryType'] != "manual"){
        if (array_key_exists('author', entry)) { 
            ret.authors = entry['author'];                //AUTHOR
        }else{
@@ -4703,9 +4746,15 @@ BibTex.prototype = {
      }
      
      if (entry['entryType'] == "inbook") {
-       if(array_key_exists('chapter', entry)){
-         ret.chapter = this._unwrap(entry['chapter']);    // inbook --> chapter
-       }
+       /**/if(array_key_exists('chapter', entry) || array_key_exists('pages', entry)){
+         if(array_key_exists('chapter', entry)){
+           ret.chapter = this._unwrap(entry['chapter']);    // inbook --> chapter
+         }
+         /**/else{
+           /**/ret.pages = this._unwrap(entry['pages']);    // inbook --> pages
+        /**/ }
+         
+       /**/}
        else{
          exito = false;
        }
@@ -4738,6 +4787,15 @@ BibTex.prototype = {
        }
      }
      
+     if (entry['entryType'] == "unpublished") {
+       if(array_key_exists('note', entry)){
+         ret.note = this._unwrap(entry['note']);    // unpublished --> note
+       }
+       else{
+         exito = false;
+       }
+     }
+     
      /*************************************************************/
      if (entry['entryType'] == "book") {
        if(array_key_exists('publisher', entry)){
@@ -4758,7 +4816,7 @@ BibTex.prototype = {
        }
      }   
      
-     if(entry['entryType'] != "booklet"){
+     if(entry['entryType'] != "booklet" && entry['entryType'] != "manual" && entry['entryType'] != "unpublished"){
        if (array_key_exists('year', entry)) {
          ret.year = this._unwrap(entry['year']);               //YEAR
        }
@@ -5285,6 +5343,63 @@ BibTex.prototype = {
          
           if(exito){
             ret = this.checkOptionalFieldsProceeding(entry, ret);
+          }
+          
+        break;
+        
+        case "manual":
+          
+          //Required fields: title
+          
+          var exito = this.checkRequieredFields(entry, ret);
+          ret.exito = exito;
+         
+          if(exito){            
+            
+            
+            if (array_key_exists('author', entry)) {
+              ret.authors = entry['author'];
+            }
+            if (array_key_exists('organization', entry)) {
+              ret.organization = this._unwrap(entry['organization']);
+            }
+            if (array_key_exists('address', entry)) {
+              ret.address = this._unwrap(entry['address']);
+            }
+            if (array_key_exists('edition', entry)) {
+              ret.edition = this._unwrap(entry['edition']);
+            }
+            if (array_key_exists('month', entry)) {
+              var month = this._unwrap(entry['month']);
+              month = this.transformMonth(month);
+              ret.month = month;
+            }
+            if (array_key_exists('year', entry)) {
+              ret.year = this._unwrap(entry['year']);
+            }
+            if (array_key_exists('note', entry)) {
+              ret.note = this._unwrap(entry['note']);
+            }
+          }
+          
+        break;
+        
+        case "unpublished":
+          
+          //Required fields: author, title, note.
+          
+          var exito = this.checkRequieredFields(entry, ret);
+          ret.exito = exito;
+         
+          if(exito){            
+            if (array_key_exists('month', entry)) {
+              var month = this._unwrap(entry['month']);
+              month = this.transformMonth(month);
+              ret.month = month;
+            }
+            if (array_key_exists('year', entry)) {
+              ret.year = this._unwrap(entry['year']);
+            }
           }
           
         break;

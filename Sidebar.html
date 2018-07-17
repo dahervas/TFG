@@ -188,19 +188,25 @@
     
     .tooltip .tooltiptext {
         visibility: hidden;
-        width: 120px;
+        /*width: 120px;*/
+        width: 154px;
         background-color: #555;
         color: #fff;
-        text-align: center;
+        /*text-align: center;*/
+        text-align: -webkit-left;
         border-radius: 6px;
         padding: 5px 0;
         position: absolute;
         z-index: 1;
         bottom: 125%;
-        left: 50%;
+        /*left: 50%;*/
+        left: -59%;
         margin-left: -60px;
         opacity: 0;
         transition: opacity 0.3s;
+        /**/
+        font-size: smaller;
+        padding-left: 4px;
     }
     
     .tooltip .tooltiptext::after {
@@ -215,6 +221,46 @@
     }
     
     .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }
+    
+    
+    .tooltip .tooltiptextAuthor {
+        visibility: hidden;
+        /*width: 120px;*/
+        width: 154px;
+        background-color: #555;
+        color: #fff;
+        /*text-align: center;*/
+        text-align: -webkit-left;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        /*left: 50%;*/
+        left: -59%;
+        margin-left: -60px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        /**/
+        font-size: xx-small;
+        padding-left: 4px;
+    }
+    
+    .tooltip .tooltiptextAuthor::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #555 transparent transparent transparent;
+    }
+    
+    .tooltip:hover .tooltiptextAuthor {
         visibility: visible;
         opacity: 1;
     }
@@ -304,23 +350,49 @@
           <form>
             <input type="text" placeholder="Tipo" id="filtroTipo">
             <div class="tooltip"><i class="fa fa-info-circle" style="font-size:20px; vertical-align: bottom;"></i>
-              <span class="tooltiptext">article, book, techreport, misc ...</span>
+              <span class="tooltiptext">Tipo o tipos de entrada. Se pueden combinar varios tipos separados por comas, y se considerará
+              la unión de todos ellos. Ejemplo: <br>
+              - article<br>
+              - book<br>
+              - techreport, phdthesis, booklet</span>
             </div>
             <input type="text" placeholder="Año" id="filtroYear">
             <div class="tooltip">   <i class="fa fa-info-circle" style="font-size:20px; vertical-align: bottom;"></i>
-              <span class="tooltiptext">2000, 1990-1995 ...</span>
+              <span class="tooltiptext">Año o rango de años. Se pueden combinar varios años o rangos de años separados por comas, y se considerará
+              la unión de todos ellos. Ejemplo: <br>
+              - 2000<br>
+              - 1990-1995<br>
+              - 1990-1995, 2001, 2011-2013
+              </span>
             </div>
             <input type="text" placeholder="Autor(es)" id="filtroAuthor">
             <div class="tooltip">   <i class="fa fa-info-circle" style="font-size:20px; vertical-align: bottom;"></i>
-              <span class="tooltiptext">David, Tip AND Frank, Boye OR David, David AND (Frank OR Tip), NOT David, NOT (David OR Frank) ...</span>
+              <span class="tooltiptextAuthor">Autor o autores de una entrada. En este caso se permite la utilización de 3 expresiones booleanas:
+              AND, OR y NOT. Ejemplo para las entradas: <br>
+              - que contengan a los autores David Y Enrique: David AND Enrique<br>
+              - que contengan al autor Enrique ó Adrián: Enrique OR Adrián<br>
+              - que no contengan al autor Felipe: NOT Felipe<br>
+              - del autor David ó los autores Adrián y Enrique: David OR (Adrián AND Enrique)<br>
+              - del autor Adrián ó el autor Enrique sin David: Adrián OR (Enrique AND NOT David)
+              </span>
             </div>
             <input type="text" placeholder="Serie(s)" id="filtroSeries">
             <div class="tooltip"><i class="fa fa-info-circle" style="font-size:20px; vertical-align: bottom;"></i>
-              <span class="tooltiptext">LNCS, OSDI'08 ...</span>
+              <span class="tooltiptext">Serie o series a las que pertenece una entrada. Se permite la combinación de varias series mediante
+              el uso de comas, y se considerará la unión de todas ellas. Ejemplo: <br>
+              - LNCS<br>
+              - OSDI'08<br>
+              - ERLANG '07, POPL '14
+              </span>
             </div>
             <input type="text" placeholder="Editorial(es)" id="filtroEditoriales">
             <div class="tooltip"><i class="fa fa-info-circle" style="font-size:20px; vertical-align: bottom;"></i>
-              <span class="tooltiptext">John Wiley & Sons, Springer-Verlag ...</span>
+              <span class="tooltiptext">Editorial o editoriales de una entrada. Se permite la combinación de varias editoriales mediante
+              el uso de las comas, y se considerará la unión de todas ellas. Ejemplo: <br>
+              - John Wiley & Sons<br>
+              - Springer-Verlag<br>
+              - ACM, MIT Press
+              </span>
             </div>
           </form>
           <!--<input type="text" placeholder="Tipo" id="filtro">-->
@@ -343,7 +415,7 @@
 
     <div class="sidebar bottom">
       <img alt="Add-on logo" class="logo" src="https://www.gstatic.com/images/branding/product/1x/translate_48dp.png" width="27" height="27">
-      <span class="gray branding-text">BETA v4</span>
+      <span class="gray branding-text">BETA v5</span>
     </div>
     
     <!--<div class="block">
@@ -552,6 +624,7 @@
       
       
       $(function() {
+        $('#select_file').prepend($('<option></option>').html('Cargando...'));
         google.script.run.withSuccessHandler(importData).getFiles("root");
 
         $('#select_file').change(function() {
@@ -565,6 +638,7 @@
                importData(dat);
                return;
              } else {
+               $('#select_file').prepend($('<option></option>').html('Cargando...'));
                google.script.run.withSuccessHandler(importData).getFiles(id);
             
                return;
@@ -606,6 +680,7 @@
             
           }
           $("#select_file option[value='loading']").remove();*/
+          $("#select_file").children().remove();
           
           if (e[key]["keyparent"]) {
             
@@ -877,8 +952,8 @@
             
         })
         .withFailureHandler(
-          function(msg, element) {
-          msg = "Hubo un problema durante el proceso.Comprueba que hayas seleccionado el documento correcto.";
+          function(/*error,*/ msg, element) {
+          msg = "Hubo un problema durante el proceso.Comprueba que hayas seleccionado el documento correcto."/*+error*/;
           showError(msg, $('#button-bar'));
           element.disabled = false;
         })

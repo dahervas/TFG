@@ -1,10 +1,10 @@
 /*
-       20180717(14:26)-Con un replace de los saltos de línea funciona correctamente modificado con la tabulación probada y con \s.
+       20180718(14:20)-Con un replace de los saltos de línea funciona correctamente modificado con la tabulación probada y con \s.
        -Se muestra el nombre del archivo al hacer el reporte
        -Funciona bien al poner Cargando... en el desplegable
        -Se han modificado los comentarios para que sean más amplios.
-       -Añadidas las definiciones de objetos de tipo manual y unpublished (probar en testedWrite.bib si funcionan TODAS las entradas 14 tiposf)
-       pero había cogido bien el inbook de arte.bib, mirar el resto de entradas.
+       -linea 1925 comentado el proceso de ordenar por fecha
+       -HA FUNCIONADO TODO EL PROCESO PARA EL ARCHIVO ARTE.BIB PERO OJO PORQUE NO SE PUEDEN ORDENAR, FALLA.
 */ 
 
 
@@ -748,7 +748,7 @@ function nombreDocumento(){
 function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib es el array de ids de documentos (funciona)
   //init the return vars
   /*var docsBib = [];
-  docsBib[0] = "1GqjFZVm6P0kBsvrSVyvNXZwIpOzatqEJ";
+  docsBib[0] = "15Ji5xlDIkBpBY2SNEtzW6-KqpKy9MZL3";
   estilo = 'unsrt';
   var filtros = [];
   var option = '2';*/
@@ -1533,6 +1533,7 @@ function checkErrors(bibtex){
       errorEncontrado = true;
     }
     
+    
     i++;
   } 
   return errorEncontrado;
@@ -1920,7 +1921,7 @@ function constructReporte(listaTuplasReporte, estilo, body, index){
       
       //AQUI SE DEBEN ORDENAR LAS TUPLAS DE LISTATUPLASREPORTE POR AÑO DESCENDENTE
       //var listaOrdenTuplasRep = ordenarPorYear(listaTuplasReporte);
-      listaTuplasReporte.sort(compare);
+      //listaTuplasReporte.sort(compare);
       //
       
       for(j=0; j<tiposEntrada.length; j++){
@@ -4928,9 +4929,9 @@ BibTex.prototype = {
     if (array_key_exists('organization', entry)) {
       ret.organization = this._unwrap(entry['organization']);
     }
-    if (array_key_exists('volume', entry) && array_key_exists('number', entry)) { //no puede existir los dos a la vez
+    /*if (array_key_exists('volume', entry) && array_key_exists('number', entry)) { //no puede existir los dos a la vez
       ret.exito = false;
-    }else if(array_key_exists('volume', entry) || array_key_exists('number', entry)){ //si existe alguno de los dos los añado
+    }*/else if(array_key_exists('volume', entry) || array_key_exists('number', entry)){ //si existe alguno de los dos los añado
       if (array_key_exists('volume', entry)) {
         ret.volume = this._unwrap(entry['volume']);
       }

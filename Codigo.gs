@@ -1,10 +1,11 @@
 /*
-       20180718(14:20)-Con un replace de los saltos de línea funciona correctamente modificado con la tabulación probada y con \s.
+       20180719(14:17)-Con un replace de los saltos de línea funciona correctamente modificado con la tabulación probada y con \s.
        -Se muestra el nombre del archivo al hacer el reporte
        -Funciona bien al poner Cargando... en el desplegable
        -Se han modificado los comentarios para que sean más amplios.
-       -linea 1925 comentado el proceso de ordenar por fecha
-       -HA FUNCIONADO TODO EL PROCESO PARA EL ARCHIVO ARTE.BIB PERO OJO PORQUE NO SE PUEDEN ORDENAR, FALLA.
+       -No falla el compare ya en ningún archivo (probado con testedWrite.bib y arte.bib)
+       
+       
 */ 
 
 
@@ -1921,7 +1922,7 @@ function constructReporte(listaTuplasReporte, estilo, body, index){
       
       //AQUI SE DEBEN ORDENAR LAS TUPLAS DE LISTATUPLASREPORTE POR AÑO DESCENDENTE
       //var listaOrdenTuplasRep = ordenarPorYear(listaTuplasReporte);
-      //listaTuplasReporte.sort(compare);
+      listaTuplasReporte.sort(compare);
       //
       
       for(j=0; j<tiposEntrada.length; j++){
@@ -2095,13 +2096,14 @@ function constructReporte(listaTuplasReporte, estilo, body, index){
 
 
 function compare(a,b) {
-  if (a.info === undefined || a.cite === undefined)return -1;
-  else if (b.info === undefined || b.cite === undefined)return 1;
+  if (a.info === undefined || a.cite === undefined /*|| isNaN(a.info.year) == false*/)return -1;
+  else if (b.info === undefined || b.cite === undefined || isNaN(b.info.year) == false || isNaN(a.info.year) == false)return 1;
   else{
     if (a.info.year < b.info.year)
       return 1;
-    if (a.info.year > b.info.year)
+    if (a.info.year >= b.info.year)
       return -1;
+
     return 0;
   }
 }

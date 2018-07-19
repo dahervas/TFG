@@ -174,13 +174,9 @@ METAS ALCANZADAS
 -Iconos añadidos.
 
 =============================================
-# VERSION 5 [EN PROCESO]
+# VERSION 5
 
 METAS ALCANZADAS
-
-=============================================
-
-METAS PRÓXIMAS
 
 -Corrección de error al procesar ficheros .bib
 
@@ -189,3 +185,5 @@ METAS PRÓXIMAS
 -Añadido el nombre del archivo en el mensaje al hacer el Reporte.
 
 -Mensajes de ayuda más extensos
+
+=============================================

@@ -1,9 +1,5 @@
 /*
-       20180719(14:17)-Con un replace de los saltos de línea funciona correctamente modificado con la tabulación probada y con \s.
-       -Se muestra el nombre del archivo al hacer el reporte
-       -Funciona bien al poner Cargando... en el desplegable
-       -Se han modificado los comentarios para que sean más amplios.
-       -No falla el compare ya en ningún archivo (probado con testedWrite.bib y arte.bib)
+       20180723(14:01)-Ahora en el mensaje de error se muestra la primera cita que falla.
        
        
 */ 
@@ -749,7 +745,7 @@ function nombreDocumento(){
 function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib es el array de ids de documentos (funciona)
   //init the return vars
   /*var docsBib = [];
-  docsBib[0] = "15Ji5xlDIkBpBY2SNEtzW6-KqpKy9MZL3";
+  docsBib[0] = "1oJHJwSyxOUNWBn5RWvS-heROmL8Ej9Ue";
   estilo = 'unsrt';
   var filtros = [];
   var option = '2';*/
@@ -781,8 +777,8 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
     objetosBib[i].content = documentos[i].getBlob().getDataAsString();
     
     /*try{*/
-      objetosBib[i].parse();
-   /* }
+    objetosBib[i].parse();
+    /*}
     catch(error){
       throw new Error( "More meaningful error." );
     }*/
@@ -796,8 +792,15 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
   var exito = true;
   for(i=0; i<objetosBib.length; i++){
     var errorEncontrado = checkErrors(objetosBib[i]);
-    if(errorEncontrado){
-      exito = false;
+    if(errorEncontrado != false){
+      
+      exito = errorEncontrado;
+      var codError = "-XÇXÜ- ";
+      var falla = codError.concat(objetosBib[i].data[exito].cite);
+      return falla;
+      /*var Vuelta = new BibTex();
+      Vuelta = objetosBib[i];
+      return exito = Vuelta.data[i].cite;*/
     }
   }
   
@@ -912,9 +915,10 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
    //Lo de debajo es fijo
     
     if(option == 1){
-       var arrayCites = getCites();
-       var arrayCitesId = getId(arrayCites);
+      var arrayCites = getCites();
+      var arrayCitesId = getId(arrayCites);
     }
+   
     
     
     //var textCites = getText();  // transforma el array en un texto
@@ -943,7 +947,13 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
       var doc = DocumentApp.openById(newIdDoc);
       var body = doc.getBody();
       var texto = body.getText();
-      exito = report(/*arrayCitesId*/allIdCitas, bibtex_dict, doc, estilo, body);
+      /*try{*/
+        exito = report(/*arrayCitesId*/allIdCitas, bibtex_dict, doc, estilo, body);
+      /*}
+      catch(error){
+        throw new Error (errorEncontrado);
+        //return error;
+      }*/
       if(exito){
         var joker = DocumentApp.getActiveDocument();
         var harley = joker.getName();
@@ -1532,6 +1542,7 @@ function checkErrors(bibtex){
     var outobj = bibtex.google(i);
     if(outobj['exito'] === false){
       errorEncontrado = true;
+      return i;
     }
     
     

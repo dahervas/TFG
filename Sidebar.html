@@ -938,8 +938,13 @@
               showError(msg, $('#button-bar'));
             }*/
 
-            if(exitoBibtex == false){
+            if(exitoBibtex == false ){
               var msg = "Hubo algun error durante el proceso. Es posible que en tu .bib falte algún campo obligatorio en alguna entrada o no hayas añadido el \bibliography para insertar la sección References.";
+              showError(msg, $('#button-bar'));
+            }
+            else if(exitoBibtex.indexOf("-XÇXÜ-") > -1){
+              exitoBibtex = exitoBibtex.slice(6);
+              var msg = "Se encontró un error en la cita con ID: "+exitoBibtex;
               showError(msg, $('#button-bar'));
             }
             else{
@@ -952,8 +957,8 @@
             
         })
         .withFailureHandler(
-          function(/*error,*/ msg, element) {
-          msg = "Hubo un problema durante el proceso.Comprueba que hayas seleccionado el documento correcto."/*+error*/;
+          function(error, msg, element) {
+          msg = "Hubo un problema durante el proceso.Comprueba que hayas seleccionado el documento correcto."+error;
           showError(msg, $('#button-bar'));
           element.disabled = false;
         })

@@ -1,5 +1,8 @@
 /*
-       20180723(14:01)-Ahora en el mensaje de error se muestra la primera cita que falla.
+       20180727(08:37)-DEBERÍA ESTAR YA CORREGIDO EL PROBLEMA, ERRORENCONTRADO >= 0 EN VEZ DE != FALSE y checkError devuelve -1 si no hay fallos.
+       -No muestra los errores WTF?
+       -Ahora en el mensaje de error se muestra la primera cita que falla.
+       -CORRECTA Y NO SE TOCA!!
        
        
 */ 
@@ -745,7 +748,7 @@ function nombreDocumento(){
 function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib es el array de ids de documentos (funciona)
   //init the return vars
   /*var docsBib = [];
-  docsBib[0] = "1oJHJwSyxOUNWBn5RWvS-heROmL8Ej9Ue";
+  docsBib[0] = "12NOXY0tANtmngONEVWJexAgO-hpfmsYn";
   estilo = 'unsrt';
   var filtros = [];
   var option = '2';*/
@@ -792,7 +795,7 @@ function getBibtexAndDoc(/*e,e2,*/docsBib, estilo, filtros, option){ //docsBib e
   var exito = true;
   for(i=0; i<objetosBib.length; i++){
     var errorEncontrado = checkErrors(objetosBib[i]);
-    if(errorEncontrado != false){
+    if(errorEncontrado >= 0/*!= false*/ /*|| errorEncontrado != false*/){/*ALGO FALLA POR AQUI*/
       
       exito = errorEncontrado;
       var codError = "-XÇXÜ- ";
@@ -1548,7 +1551,7 @@ function checkErrors(bibtex){
     
     i++;
   } 
-  return errorEncontrado;
+  return -1;
 }
 
 function checkBibliography(){
